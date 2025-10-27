@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Innovation & Collaboration Hub</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Configure Tailwind to use Inter font and custom colors -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'primary-blue': '#1e40af', // Deep Blue
+                        'secondary-orange': '#ea580c', // Vibrant Orange
+                        'background-light': '#f9fafb', // Light Gray background
+                        'card-bg': '#ffffff',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Apply Inter font globally and smooth scrolling */
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+        }
+        /* Custom gradient background for the hero section */
+        .hero-bg {
+            background-image: linear-gradient(135deg, #1e40af 0%, #3b82f6 100%);
+        }
+        /* Hover effect for action buttons */
+        .action-button {
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+            cursor: pointer; /* Indicate interactivity */
+        }
+        .action-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-background-light">
+
+    <!-- Hero Section -->
+    <header class="hero-bg py-16 sm:py-24 text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight mb-4">
+                Collaborative Innovation Hub
+            </h1>
+            <p class="text-xl sm:text-2xl font-light max-w-3xl mx-auto opacity-90">
+                The gateway for staff and external partners to <b>Participate</b>, <b>Propose solutions</b>, <b>Fund ideas</b>, and <b>Partner</b> with us.
+            </p>
+        </div>
+    </header>
+
+    <!-- Main Content Area: Handles view switching -->
+    <main id="main-content">
+
+        <!-- HOME VIEW: 3-Pillar Landing Section -->
+        <section id="home-view" class="view py-16 sm:py-24">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <h2 class="text-3xl font-bold text-gray-800 text-center mb-12">
+                    Choose Your Pathway to Impact
+                </h2>
+
+                <div class="grid md:grid-cols-3 gap-8">
+
+                    <!-- 1. Solve Existing Challenges (Call for Challenges) -->
+                    <div class="bg-card-bg p-8 rounded-xl shadow-lg border-t-4 border-secondary-orange transform transition duration-300 hover:shadow-2xl flex flex-col h-full">
+                        <div class="flex-grow"> 
+                            <div class="text-5xl mb-4 text-secondary-orange text-center">🚀</div>
+                            <h3 class="text-2xl font-semibold text-gray-900 mb-3">Solve Open Challenges (Call for Solutions)</h3>
+                            <p class="text-gray-600 mb-6">
+                                <b>Action:</b> Propose a solution to an existing, publicly announced problem or capability gap. This pathway leads to procurement, investment, and network partnership.
+                            </p>
+                            <div class="mb-6 text-sm text-gray-500 italic border-l-2 border-secondary-orange pl-3">
+                                <p>Note: This process is designed for parties who can fulfill a defined need. It is the primary route to secure <b>funding</b> and <b>formal partnership</b> to implement your solution.</p>
+                            </div>
+                        </div>
+                        <a onclick="showView('challenges')" class="action-button inline-block w-full text-center py-3 px-6 bg-secondary-orange text-white font-semibold rounded-lg hover:bg-orange-600 mt-4">
+                            View Active Challenges
+                        </a>
+                    </div>
+
+                    <!-- 2. Signal a Problem / Shortcoming (Problem Statement) -->
+                    <div class="bg-card-bg p-8 rounded-xl shadow-lg border-t-4 border-primary-blue transform transition duration-300 hover:shadow-2xl flex flex-col h-full">
+                        <div class="flex-grow">
+                            <div class="text-5xl mb-4 text-primary-blue text-center">⚠️</div>
+                            <h3 class="text-2xl font-semibold text-gray-900 mb-3">Signal a Problem / Need (No Solution Required)</h3>
+                            <p class="text-gray-600 mb-6">
+                                <b>Action:</b> Define a problem or shortcoming that needs attention. You don't need a solution or ownership—just the problem definition or root cause.
+                            </p>
+                            <div class="mb-6 text-sm text-gray-500 italic border-l-2 border-primary-blue pl-3">
+                                <p>Note: Your input helps us identify critical capability gaps (e.g., in <b>Data, Analysis, or Management</b>). Once validated, these problems may become official, funded challenges.</p>
+                            </div>
+                        </div>
+                        <a onclick="showView('problem')" class="action-button inline-block w-full text-center py-3 px-6 bg-primary-blue text-white font-semibold rounded-lg hover:bg-blue-700 mt-4">
+                            Submit Problem Statement
+                        </a>
+                    </div>
+
+                    <!-- 3. Submit Ideas (Solution Hypothesis) -->
+                    <div class="bg-card-bg p-8 rounded-xl shadow-lg border-t-4 border-gray-400 transform transition duration-300 hover:shadow-2xl flex flex-col h-full">
+                        <div class="flex-grow">
+                            <div class="text-5xl mb-4 text-gray-500 text-center">💡</div>
+                            <h3 class="text-2xl font-semibold text-gray-900 mb-3">Propose a New Idea ('Unknown Unknowns')</h3>
+                            <p class="text-gray-600 mb-6">
+                                <b>Action:</b> Submit a solution-oriented hypothesis, a concept you've seen work elsewhere, or a "wishlist" idea. We keep the gates open for external ideas and link them to internal needs.
+                            </p>
+                            <div class="mb-6 text-sm text-gray-500 italic border-l-2 border-gray-400 pl-3">
+                                <p>Note: Priority focus and investment are directed towards solutions addressing established capability gaps. Additional ideas are welcome but should not divert attention from these priorities.</p>
+                            </div>
+                        </div>
+                        <a href="#submit-idea" class="action-button inline-block w-full text-center py-3 px-6 bg-gray-500 text-white font-semibold rounded-lg hover:bg-gray-600 mt-4">
+                            Submit Idea / Solution
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Partnership Callout Section (Collaboration) - Updated -->
+            <section class="bg-white border-t border-b py-12 mt-16">
+                <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                    <h3 class="text-2xl font-bold text-gray-800 mb-4">Are you in the Industry Sector?</h3>
+                    <p class="text-lg text-gray-600 mb-6">
+                        <b>Collaboration:</b> "If you work in the industry sector and are interested in a collaboration, please feel free to contact us via the form below."
+                    </p>
+                    <a onclick="showView('collaboration')" class="action-button inline-block py-3 px-8 bg-secondary-orange text-white font-semibold rounded-lg hover:bg-orange-600">
+                        Collaborate
+                    </a>
+                </div>
+            </section>
+        </section> <!-- End HOME VIEW -->
+
+
+        <!-- CHALLENGES VIEW: Detail Page -->
+        <section id="challenges-view" class="view hidden py-16 sm:py-24">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 bg-card-bg p-8 rounded-xl shadow-lg">
+                <a onclick="showView('home')" class="text-primary-blue hover:underline mb-4 inline-block font-semibold">
+                    &larr; Back to Pathways
+                </a>
+                <h2 class="text-4xl font-extrabold text-gray-900 mb-6 border-b pb-2">
+                    Active Challenges & Calls for Solutions
+                </h2>
+                <p class="text-lg text-gray-600 mb-8">
+                    These are our currently defined capability gaps. We invite staff and external partners to propose innovative solutions. Successful proposals will be eligible for direct funding and formal partnership agreements.
+                </p>
+
+                <!-- Mock Challenges List -->
+                <div class="space-y-6">
+                    <!-- Challenge 1 -->
+                    <div class="border p-4 rounded-lg bg-background-light">
+                        <h4 class="text-xl font-bold text-primary-blue">Challenge 1: Real-time Data Dissemination Architecture</h4>
+                        <p class="text-gray-700 mt-1"><b>Category:</b> Data, Dissemination</p>
+                        <p class="text-sm text-gray-500 mt-2">We require a scalable, secure framework to rapidly distribute classified and unclassified data streams to remote field units with low latency and high reliability.</p>
+                        <a href="#apply-challenge-1" class="text-secondary-orange hover:underline font-semibold mt-3 inline-block">Propose Solution &rarr;</a>
+                    </div>
+                    <!-- Challenge 2 -->
+                    <div class="border p-4 rounded-lg bg-background-light">
+                        <h4 class="text-xl font-bold text-primary-blue">Challenge 2: Automated Threat Analysis Model</h4>
+                        <p class="text-gray-700 mt-1"><b>Category:</b> Analysis</p>
+                        <p class="text-sm text-gray-500 mt-2">Develop a machine learning model capable of identifying anomalous patterns in large text datasets and assigning a probability score for potential threats, reducing manual review time by 40%.</p>
+                        <a href="#apply-challenge-2" class="text-secondary-orange hover:underline font-semibold mt-3 inline-block">Propose Solution &rarr;</a>
+                    </div>
+                </div>
+            </div>
+        </section> <!-- End CHALLENGES VIEW -->
+
+
+        <!-- PROBLEM STATEMENT VIEW: Detail Form -->
+        <section id="problem-view" class="view hidden py-16 sm:py-24">
+            <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 bg-card-bg p-8 rounded-xl shadow-lg">
+                <a onclick="showView('home')" class="text-primary-blue hover:underline mb-4 inline-block font-semibold">
+                    &larr; Back to Pathways
+                </a>
+                <h2 class="text-4xl font-extrabold text-gray-900 mb-6 border-b pb-2">
+                    Signal a Problem or Shortcoming
+                </h2>
+                <p class="text-lg text-gray-600 mb-8">
+                    Use this form to define a gap, root cause, or need you've identified. **No solution is required**—simply articulate the problem accurately.
+                </p>
+
+                <form onsubmit="alert('Problem Statement Submitted!'); showView('home'); return false;" class="space-y-6">
+
+                    <!-- 1. Problem Category Select -->
+                    <div>
+                        <label for="category" class="block text-sm font-medium text-gray-700">1. Problem Category <b>(Required)</b></label>
+                        <select id="category" name="category" required class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-primary-blue focus:border-primary-blue sm:text-sm rounded-md shadow-sm">
+                            <option value="">Select a Category...</option>
+                            <option value="analysis">Analysis</option>
+                            <option value="collection">Collection</option>
+                            <option value="management">Management</option>
+                            <option value="data">Data</option>
+                            <option value="preparation">Preparation</option>
+                            <option value="dissemination">Dissemination</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </div>
+
+                    <!-- 2. Problem Title -->
+                    <div>
+                        <label for="problem-title" class="block text-sm font-medium text-gray-700">2. Problem Title <b>(Required)</b></label>
+                        <input type="text" id="problem-title" name="problem-title" required class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-3" placeholder="A concise, descriptive title for the problem">
+                    </div>
+
+
+                    <!-- 3. Problem Definition / Root Cause -->
+                    <div>
+                        <label for="problem-definition" class="block text-sm font-medium text-gray-700">3. Problem Definition / Root Cause <b>(Required)</b></label>
+                        <p class="text-xs text-gray-500 mb-1">"What's happening and why is it a problem?" &rarr; Describe the symptom and, if known, the underlying cause.</p>
+                        <textarea id="problem-definition" name="problem-definition" rows="5" required class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-3" placeholder="Clearly define the problem or its root cause..."></textarea>
+                    </div>
+
+                    <!-- 4. Impact -->
+                    <div>
+                        <label for="impact" class="block text-sm font-medium text-gray-700">4. Impact <b>(Required)</b></label>
+                        <p class="text-xs text-gray-500 mb-1">"Who's affected and how? What's the consequence?" (e.g., effort wasted, service delays, data loss)</p>
+                        <textarea id="impact" name="impact" rows="3" required class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-3" placeholder="Describe the consequences of the problem..."></textarea>
+                    </div>
+
+                    <!-- 5. Optional: Solution Hint / Ideas -->
+                    <div>
+                        <label for="potential-solution" class="block text-sm font-medium text-gray-700">5. Optional: Solution Hint / Ideas</label>
+                        <p class="text-xs text-gray-500 mb-1">"Do you already see a possible fix or mitigation?"</p>
+                        <textarea id="potential-solution" name="potential-solution" rows="3" class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-3" placeholder="Provide any existing ideas or hypotheses..."></textarea>
+                    </div>
+                    
+                    <!-- 6. Optional: ‘How might we…’ formulation -->
+                    <div>
+                        <label for="how-might-we" class="block text-sm font-medium text-gray-700">6. Optional: ‘How might we…’ Formulation</label>
+                        <p class="text-xs text-gray-500 mb-1">"Rephrase your problem as an opportunity for improvement."</p>
+                        <input type="text" id="how-might-we" name="how-might-we" class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-3" placeholder="E.g., How might we streamline data collection to reduce human error?">
+                    </div>
+
+
+                    <!-- Contact Info (Mock) -->
+                    <div>
+                        <label for="contact-name" class="block text-sm font-medium text-gray-700">Your Name (Internal/External)</label>
+                        <input type="text" id="contact-name" name="contact-name" class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-3">
+                    </div>
+
+                    <button type="submit" class="action-button w-full py-3 px-4 bg-primary-blue text-white font-semibold rounded-lg hover:bg-blue-700">
+                        Submit Problem Statement
+                    </button>
+                </form>
+            </div>
+        </section> <!-- End PROBLEM STATEMENT VIEW -->
+
+        <!-- COLLABORATION VIEW: Detail Form for Partnership -->
+        <section id="collaboration-view" class="view hidden py-16 sm:py-24">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 bg-card-bg p-8 rounded-xl shadow-lg">
+                <a onclick="showView('home')" class="text-primary-blue hover:underline mb-4 inline-block font-semibold">
+                    &larr; Back to Pathways
+                </a>
+                <h2 class="text-4xl font-extrabold text-gray-900 mb-6 border-b pb-2">
+                    Industry Collaboration Request
+                </h2>
+                <p class="text-lg text-gray-600 mb-8">
+                    Please fill in all fields accurately. Your request will be treated with strict confidentiality.
+                </p>
+
+                <form onsubmit="alert('Collaboration Request Submitted!'); showView('home'); return false;" class="space-y-8">
+                    
+                    <!-- Company Details -->
+                    <fieldset>
+                        <legend class="text-2xl font-bold text-gray-800 mb-4 border-b pb-2">Company Details</legend>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            
+                            <!-- Company Name -->
+                            <div>
+                                <label for="company-name" class="block text-sm font-medium text-gray-700">Company Name / Organization</label>
+                                <input type="text" id="company-name" name="company-name" required class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-3">
+                            </div>
+
+                            <!-- Company Website -->
+                            <div>
+                                <label for="company-website" class="block text-sm font-medium text-gray-700">Company / Organization Website</label>
+                                <input type="url" id="company-website" name="company-website" required class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-3" placeholder="https://">
+                            </div>
+                            
+                            <!-- VAT/Enterprise Number -->
+                            <div class="md:col-span-2">
+                                <label for="vat-number" class="block text-sm font-medium text-gray-700">VAT Number / Enterprise Number</label>
+                                <input type="text" id="vat-number" name="vat-number" required class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-3">
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <!-- Headquarters Address -->
+                    <fieldset>
+                        <legend class="text-xl font-bold text-gray-800 mb-4 border-b pb-2">Headquarters Address</legend>
+                        <div class="grid grid-cols-1 sm:grid-cols-6 gap-6">
+                            
+                            <!-- Street -->
+                            <div class="sm:col-span-3">
+                                <label for="street" class="block text-sm font-medium text-gray-700">Street</label>
+                                <input type="text" id="street" name="street" required class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-3">
+                            </div>
+                            
+                            <!-- Number -->
+                            <div class="sm:col-span-1">
+                                <label for="number" class="block text-sm font-medium text-gray-700">Number</label>
+                                <input type="text" id="number" name="number" required class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-3">
+                            </div>
+                            
+                            <!-- Bus/Suite -->
+                            <div class="sm:col-span-2">
+                                <label for="bus" class="block text-sm font-medium text-gray-700">Bus/Suite</label>
+                                <input type="text" id="bus" name="bus" class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-3">
+                            </div>
+
+                            <!-- Postal Code -->
+                            <div class="sm:col-span-2">
+                                <label for="postal-code" class="block text-sm font-medium text-gray-700">Postal Code</label>
+                                <input type="text" id="postal-code" name="postal-code" required class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-3">
+                            </div>
+                            
+                            <!-- City -->
+                            <div class="sm:col-span-2">
+                                <label for="city" class="block text-sm font-medium text-gray-700">City</label>
+                                <input type="text" id="city" name="city" required class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-3">
+                            </div>
+
+                            <!-- Country -->
+                            <div class="sm:col-span-2">
+                                <label for="country" class="block text-sm font-medium text-gray-700">Country</label>
+                                <input type="text" id="country" name="country" required class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-3">
+                            </div>
+                        </div>
+                    </fieldset>
+                    
+                    <!-- Domain and Offer Type -->
+                    <fieldset>
+                        <legend class="text-xl font-bold text-gray-800 mb-4 border-b pb-2">Domain & Offer Type</legend>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <!-- Domain Select -->
+                            <div>
+                                <label for="domain" class="block text-sm font-medium text-gray-700">Company Domain: Choose the domain that best suits your expertise:</label>
+                                <select id="domain" name="domain" required class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-primary-blue focus:border-primary-blue sm:text-sm rounded-md shadow-sm">
+                                    <option value="">Select a Domain...</option>
+                                    <option value="land">Land</option>
+                                    <option value="air">Air</option>
+                                    <option value="maritime">Maritime</option>
+                                    <option value="cyber">Cyber</option>
+                                    <option value="space">Space</option>
+                                    <option value="comm_it">Communication & IT</option>
+                                    <option value="cbrn">CBRN</option>
+                                    <option value="ai_autonomous">AI & Autonomous Systems</option>
+                                    <option value="simulation_training">Simulation & Training</option>
+                                    <option value="logistics">Logistics</option>
+                                    <option value="medical">Medical</option>
+                                    <option value="energy_sustainability">Energy & Sustainability</option>
+                                    <option value="infrastructure_security">Infrastructure Security</option>
+                                    <option value="research_innovation">Research & Innovation</option>
+                                    <option value="software_data">Software & Data</option>
+                                    <option value="production_material">Production & Material Technology</option>
+                                    <option value="human_factors">Human Factors</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                            
+                            <!-- Offer Type Select -->
+                            <div>
+                                <label for="offer-type" class="block text-sm font-medium text-gray-700">Indicate what type of offer you are making (Type of Offer):</label>
+                                <select id="offer-type" name="offer-type" required class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-primary-blue focus:border-primary-blue sm:text-sm rounded-md shadow-sm">
+                                    <option value="">Select Offer Type...</option>
+                                    <option value="product">Product/Solution</option>
+                                    <option value="expertise">Expertise/Consultancy</option>
+                                    <option value="research">Joint Research</option>
+                                    <option value="funding">Funding Opportunity</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <!-- Contact Details -->
+                    <fieldset>
+                        <legend class="text-2xl font-bold text-gray-800 mb-4 border-b pb-2">Contact Details</legend>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            
+                            <!-- Function/Role -->
+                            <div>
+                                <label for="contact-function" class="block text-sm font-medium text-gray-700">Function (title or role within the organization)</label>
+                                <input type="text" id="contact-function" name="contact-function" required class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-3">
+                            </div>
+
+                            <!-- Email Address -->
+                            <div>
+                                <label for="email-business" class="block text-sm font-medium text-gray-700">Email Address (Business)</label>
+                                <input type="email" id="email-business" name="email-business" required class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-3">
+                            </div>
+                            
+                            <!-- Phone Number -->
+                            <div class="md:col-span-2">
+                                <label for="phone-number" class="block text-sm font-medium text-gray-700">Phone Number (+XX...)</label>
+                                <input type="tel" id="phone-number" name="phone-number" class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-3" placeholder="+XX...">
+                            </div>
+                        </div>
+                    </fieldset>
+
+                    <!-- Reason and Message -->
+                    <fieldset>
+                        <legend class="text-2xl font-bold text-gray-800 mb-4 border-b pb-2">Reason for Contact</legend>
+                        <div>
+                            <label for="contact-reason" class="block text-sm font-medium text-gray-700">Reason for Contact</label>
+                            <textarea id="contact-reason" name="contact-reason" rows="2" required class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-3" placeholder="Briefly state your reason for contact..."></textarea>
+                        </div>
+                        
+                        <div>
+                            <label for="message" class="block text-sm font-medium text-gray-700">Message <b>(Message is required)</b></label>
+                            <textarea id="message" name="message" rows="5" required class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-3" placeholder="Provide details regarding your proposed collaboration..."></textarea>
+                        </div>
+                    </fieldset>
+
+                    <button type="submit" class="action-button w-full py-3 px-4 bg-secondary-orange text-white font-semibold rounded-lg hover:bg-orange-600">
+                        Submit Collaboration Request
+                    </button>
+                </form>
+            </div>
+        </section> <!-- End COLLABORATION VIEW -->
+
+
+    </main>
+    <!-- End Main Content Area -->
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <p class="text-sm opacity-75">
+                © 2025 Innovation & Development. All rights reserved.
+            </p>
+            <p class="mt-2 text-xs opacity-50">
+                Positioning: Open to Internal Staff & External Parties.
+            </p>
+        </div>
+    </footer>
+
+    <!-- JavaScript for View Switching -->
+    <script>
+        /**
+         * Function to show a specific view and hide others.
+         * @param {string} viewName - The ID prefix of the view to show (e.g., 'home', 'challenges', 'problem', 'collaboration').
+         */
+        function showView(viewName) {
+            document.querySelectorAll('.view').forEach(view => {
+                view.classList.add('hidden');
+            });
+            const targetView = document.getElementById(viewName + '-view');
+            if (targetView) {
+                targetView.classList.remove('hidden');
+                window.scrollTo({ top: 0, behavior: 'smooth' }); // Scroll to top on view change
+            }
+        }
+    </script>
+
+</body>
+</html>
