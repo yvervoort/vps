@@ -118,7 +118,7 @@
                                 <p>Note: Priority focus and investment are directed towards solutions addressing established capability gaps. Additional ideas are welcome but should not divert attention from these priorities.</p>
                             </div>
                         </div>
-                        <a href="#submit-idea" class="action-button inline-block w-full text-center py-3 px-6 bg-gray-500 text-white font-semibold rounded-lg hover:bg-gray-600 mt-4">
+                        <a onclick="showView('idea')" class="action-button inline-block w-full text-center py-3 px-6 bg-gray-500 text-white font-semibold rounded-lg hover:bg-gray-600 mt-4">
                             Submit Idea / Solution
                         </a>
                     </div>
@@ -184,7 +184,7 @@
                     Signal a Problem or Shortcoming
                 </h2>
                 <p class="text-lg text-gray-600 mb-8">
-                    Use this form to define a gap, root cause, or need you've identified. **No solution is required**—simply articulate the problem accurately.
+                    Use this form to define a gap, root cause, or need you've identified. <b>No solution is required</b>—simply articulate the problem accurately.
                 </p>
 
                 <form onsubmit="alert('Problem Statement Submitted!'); showView('home'); return false;" class="space-y-6">
@@ -252,6 +252,217 @@
                 </form>
             </div>
         </section> <!-- End PROBLEM STATEMENT VIEW -->
+
+        <!-- IDEA SUBMISSION VIEW: Detail Form -->
+        <section id="idea-view" class="view hidden py-16 sm:py-24">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 bg-card-bg p-8 rounded-xl shadow-lg">
+                <a onclick="showView('home')" class="text-gray-500 hover:underline mb-4 inline-block font-semibold">
+                    &larr; Back to Pathways
+                </a>
+                <h2 class="text-4xl font-extrabold text-gray-900 mb-2">
+                    Idea Submission Form
+                </h2>
+                <h3 class="text-2xl font-semibold text-gray-600 mb-6 border-b pb-2">
+                    🌟 Welcome to the Innovation Idea Submission Form! 🌟
+                </h3>
+
+                <p class="text-lg text-gray-600 mb-8">
+                    Innovation is the driving force at Innovation for Defense. Your input is invaluable for progress, whether you're an internal team member or an external visionary. We welcome diverse perspectives to fuel our creative engine.
+                </p>
+                
+                <!-- NOTE: This form requires JS for conditional fields, which will be simplified for this single-file HTML implementation -->
+                <form id="idea-submission-form" onsubmit="alert('Idea Submitted! Thank you for your concept.'); showView('home'); return false;" class="space-y-8">
+                    
+                    <!-- 1-7: Contact Details & Affiliation -->
+                    <fieldset>
+                        <legend class="text-2xl font-bold text-gray-800 mb-4 border-b pb-2">1-7. Contact & Affiliation</legend>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            
+                            <!-- 1. First Name -->
+                            <div>
+                                <label for="idea-first-name" class="block text-sm font-medium text-gray-700">1. First Name <b>(Required)</b></label>
+                                <input type="text" id="idea-first-name" name="first-name" required class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-3">
+                            </div>
+
+                            <!-- 2. Last Name -->
+                            <div>
+                                <label for="idea-last-name" class="block text-sm font-medium text-gray-700">2. Last Name <b>(Required)</b></label>
+                                <input type="text" id="idea-last-name" name="last-name" required class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-3">
+                            </div>
+                            
+                            <!-- 3. Affiliation -->
+                            <div class="md:col-span-2">
+                                <label for="affiliation" class="block text-sm font-medium text-gray-700">3. Are you part of Belgian Defence or not? <b>(Required)</b></label>
+                                <select id="affiliation" name="affiliation" required class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:text-sm rounded-md shadow-sm">
+                                    <option value="">Select Affiliation...</option>
+                                    <option value="defence">Defence</option>
+                                    <option value="external">External</option>
+                                </select>
+                            </div>
+
+                            <!-- 4. Which organization of the Defense are you part of? (If Defence) -->
+                            <div class="md:col-span-2">
+                                <label for="defence-organization" class="block text-sm font-medium text-gray-700">4. Which organization of the Defense are you part of? (If Defence)</label>
+                                <select id="defence-organization" name="defence-organization" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:text-sm rounded-md shadow-sm">
+                                    <option value="">Select Organization (Optional)</option>
+                                    <option value="component">Component</option>
+                                    <option value="staff-departments">Staff Departments</option>
+                                    <option value="general-directorate">General Directorate</option>
+                                </select>
+                            </div>
+
+                            <!-- 5. Which Component? (If Organization is Component) -->
+                            <div class="md:col-span-2">
+                                <label for="defence-component" class="block text-sm font-medium text-gray-700">5. Which Component? (If applicable)</label>
+                                <select id="defence-component" name="defence-component" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:text-sm rounded-md shadow-sm">
+                                    <option value="">Select Component (Optional)</option>
+                                    <option value="medical">Medical</option>
+                                    <option value="land">Land</option>
+                                    <option value="air">Air</option>
+                                    <option value="navy">Navy</option>
+                                    <option value="cyber">Cyber</option>
+                                </select>
+                            </div>
+
+                            <!-- 6. Email -->
+                            <div class="md:col-span-2">
+                                <label for="idea-email" class="block text-sm font-medium text-gray-700">6. Email <b>(Required)</b></label>
+                                <p class="text-xs text-gray-500 mb-1">If you are employed by the Belgian Defence, please provide your official work e-mail address. (e.g., john.doe@organisation.com)</p>
+                                <input type="email" id="idea-email" name="email" required class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-3">
+                            </div>
+
+                             <!-- 7. Job Title / Role -->
+                            <div class="md:col-span-2">
+                                <label for="idea-role" class="block text-sm font-medium text-gray-700">7. Job Title - Role <b>(Required)</b></label>
+                                <input type="text" id="idea-role" name="job-role" required class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-3">
+                            </div>
+                        </div>
+                    </fieldset>
+                    
+                    <!-- 8-12: Idea Concept & Impact -->
+                    <fieldset>
+                        <legend class="text-2xl font-bold text-gray-800 mb-4 border-b pb-2">8-12. Idea Concept & Impact</legend>
+
+                        <!-- 8. Problem Definition / Root Cause (NEW) -->
+                        <div>
+                            <label for="idea-problem-definition" class="block text-sm font-medium text-gray-700">8. Problem Definition / Root Cause <b>(Required)</b></label>
+                            <p class="text-xs text-gray-500 mb-1">"What's happening and why is it a problem?" &rarr; Describe the symptom and, if known, the underlying cause.</p>
+                            <textarea id="idea-problem-definition" name="idea-problem-definition" rows="5" required class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-3" placeholder="Clearly define the problem or its root cause..."></textarea>
+                        </div>
+                        
+                        <!-- 9. Title (Renumbered from 8) -->
+                        <div>
+                            <label for="idea-title" class="block text-sm font-medium text-gray-700">9. Give a title to your idea <b>(Required)</b></label>
+                            <p class="text-xs text-gray-500 mb-1">The title answers the question: what it does and for whom?</p>
+                            <input type="text" id="idea-title" name="idea-title" required class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-3">
+                        </div>
+
+                        <!-- 10. Explain the full concept (Renumbered from 9) -->
+                        <div>
+                            <label for="full-concept" class="block text-sm font-medium text-gray-700">10. Explain the full concept <b>(Required)</b></label>
+                            <p class="text-xs text-gray-500 mb-1">
+                                What's your idea (the missing piece of the puzzle)? What is absent/incomplete in the current state, as opposed to the existing situation? What's the goal of the project (how does the solution benefit users)?
+                            </p>
+                            <textarea id="full-concept" name="full-concept" rows="6" required class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-3"></textarea>
+                        </div>
+                        
+                        <!-- 11. Who are impacted (Renumbered from 10) -->
+                        <div>
+                            <label for="who-impacted" class="block text-sm font-medium text-gray-700">11. Who are impacted? <b>(Required)</b></label>
+                            <p class="text-xs text-gray-500 mb-2">Does your idea have an impact across the organization?</p>
+                            <select id="who-impacted" name="who-impacted" required class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:text-sm rounded-md shadow-sm">
+                                <option value="">Select Impact Scope...</option>
+                                <option value="one-component">One Component</option>
+                                <option value="more-than-one">More than one Component</option>
+                                <option value="whole-defense">The whole Defense</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+
+                        <!-- 12. Which component is impacted (Renumbered from 11) -->
+                        <div>
+                            <label for="impacted-component" class="block text-sm font-medium text-gray-700">12. Which component is impacted? <b>(Required)</b></label>
+                            <select id="impacted-component" name="impacted-component" required class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:text-sm rounded-md shadow-sm">
+                                <option value="">Select Component...</option>
+                                <option value="medical">Medical</option>
+                                <option value="land">Land</option>
+                                <option value="air">Air</option>
+                                <option value="navy">Navy</option>
+                                <option value="cyber">Cyber</option>
+                            </select>
+                        </div>
+                    </fieldset>
+
+                    <!-- 13-14: Urgency (Renumbered from 12-13) -->
+                    <fieldset>
+                        <legend class="text-2xl font-bold text-gray-800 mb-4 border-b pb-2">13-14. Urgency</legend>
+                        
+                        <!-- 13. Critical Point (Renumbered from 12) -->
+                        <div>
+                            <label for="critical-point" class="block text-sm font-medium text-gray-700">13. Are we at a critical point where not acting now could make things significantly worse? <b>(Required)</b></label>
+                            <select id="critical-point" name="critical-point" required class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:text-sm rounded-md shadow-sm">
+                                <option value="">Select Urgency Level...</option>
+                                <option value="1">1. The current status quo is not an issue</option>
+                                <option value="2">2. It needs resolving, but not urgently</option>
+                                <option value="3">3. Something must be done right away</option>
+                            </select>
+                        </div>
+
+                        <!-- 14. Justify Urgency (Renumbered from 13) -->
+                        <div>
+                            <label for="justify-urgency" class="block text-sm font-medium text-gray-700">14. Please justify the urgency</label>
+                            <input type="text" id="justify-urgency" name="justify-urgency" class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-3" placeholder="Explain why this needs to be resolved right away, if applicable.">
+                        </div>
+                    </fieldset>
+
+                    <!-- 15-19: Execution and Budget (Renumbered from 14-18) -->
+                    <fieldset>
+                        <legend class="text-2xl font-bold text-gray-800 mb-4 border-b pb-2">15-19. Execution & Budget</legend>
+                        
+                        <!-- 15. How does it work and key features (Renumbered from 14) -->
+                        <div>
+                            <label for="how-it-works" class="block text-sm font-medium text-gray-700">15. How does it work and what are the key features of the solution? <b>(Required)</b></label>
+                            <textarea id="how-it-works" name="how-it-works" rows="4" required class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-3"></textarea>
+                        </div>
+
+                        <!-- 16. Future Potential (Renumbered from 15) -->
+                        <div>
+                            <label for="future-potential" class="block text-sm font-medium text-gray-700">16. What's the future potential? <b>(Required)</b></label>
+                            <textarea id="future-potential" name="future-potential" rows="3" required class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-3"></textarea>
+                        </div>
+
+                        <!-- 17. How to realize / resources needed (Renumbered from 16) -->
+                        <div>
+                            <label for="how-to-realize" class="block text-sm font-medium text-gray-700">17. How do you want to realize the idea and what resources do you need? <b>(Required)</b></label>
+                            <textarea id="how-to-realize" name="how-to-realize" rows="4" required class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-3"></textarea>
+                        </div>
+
+                        <!-- 18. Expected Timing (Renumbered from 17) -->
+                        <div>
+                            <label for="expected-timing" class="block text-sm font-medium text-gray-700">18. What is the expected timing for your project? <b>(Required)</b></label>
+                            <p class="text-xs text-gray-500 mb-1">How long will it take to realize the project? Give an estimate.</p>
+                            <input type="text" id="expected-timing" name="expected-timing" required class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-3" placeholder="E.g., 6-9 months, 1 year MVP">
+                        </div>
+
+                        <!-- 19. Estimated Budget (Renumbered from 18) -->
+                        <div>
+                            <label for="estimated-budget" class="block text-sm font-medium text-gray-700">19. What is the estimated budget in €? <b>(Required)</b></label>
+                            <select id="estimated-budget" name="estimated-budget" required class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-gray-500 focus:border-gray-500 sm:text-sm rounded-md shadow-sm">
+                                <option value="">Select Budget Range...</option>
+                                <option value="1">1. Under € 2,500</option>
+                                <option value="2">2. € 2,500 - € 5,500</option>
+                                <option value="3">3. € 5,500 - € 30,000</option>
+                                <option value="4">4. More than € 30,000</option>
+                            </select>
+                        </div>
+                    </fieldset>
+
+                    <button type="submit" class="action-button w-full py-3 px-4 bg-gray-500 text-white font-semibold rounded-lg hover:bg-gray-600">
+                        Submit Idea
+                    </button>
+                </form>
+            </div>
+        </section> <!-- End IDEA SUBMISSION VIEW -->
 
         <!-- COLLABORATION VIEW: Detail Form for Partnership -->
         <section id="collaboration-view" class="view hidden py-16 sm:py-24">
@@ -447,7 +658,7 @@
     <script>
         /**
          * Function to show a specific view and hide others.
-         * @param {string} viewName - The ID prefix of the view to show (e.g., 'home', 'challenges', 'problem', 'collaboration').
+         * @param {string} viewName - The ID prefix of the view to show (e.g., 'home', 'challenges', 'problem', 'collaboration', 'idea').
          */
         function showView(viewName) {
             document.querySelectorAll('.view').forEach(view => {
