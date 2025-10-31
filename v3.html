@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Innovation & Collaboration Hub</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        'off-white': '#F4F1E8',
+                        'deep-teal': '#184552',    /* Solve Challenge & Main Text/Header/Footer */
+                        'cyan-teal': '#008991',    /* Header Gradient End / Hover */
+                        'coral-red': '#E55A5A',    /* Share Idea/Solution Color & Collaboration */
+                        'slate-gray': '#8297A1',   /* Signal Problem Color */
+                        'card-bg': '#ffffff',
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                    },
+                }
+            }
+        }
+    </script>
+    <style>
+        /* Apply Inter font globally and smooth scrolling */
+        body {
+            font-family: 'Inter', sans-serif;
+            scroll-behavior: smooth;
+            background-color: theme('colors.off-white');
+        }
+        /* Custom gradient background for the hero section */
+        .hero-bg {
+            background-image: linear-gradient(135deg, #184552 0%, #008991 100%);
+        }
+        /* Style to ensure white text pops against the dark gradient background */
+        .hero-text-shadow {
+            text-shadow: 1px 1px 2px rgba(0, 0, 0, 0.4);
+        }
+        /* Hover effect for action buttons */
+        .action-button {
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+            cursor: pointer; /* Indicate interactivity */
+        }
+        .action-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-off-white">
+
+    <header class="hero-bg py-16 sm:py-20 text-white">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <h1 class="text-4xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight mb-4 hero-text-shadow">
+                Collaborative Innovation Hub
+            </h1>
+            <p class="text-xl sm:text-2xl max-w-3xl mx-auto hero-text-shadow">
+                The gateway for staff and external partners to <b>Participate</b>, <b>Propose solutions</b>, <b>Fund ideas</b>, and <b>Partner</b> with us.
+            </p>
+        </div>
+    </header>
+
+    <main id="main-content">
+
+        <section id="home-view" class="view py-16 sm:py-16">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                
+                <div class="text-center mb-16">
+                    <h2 class="text-3xl font-bold text-gray-800 mb-6">
+                        How You Can Contribute and Collaborate
+                    </h2>
+                    <p class="text-lg text-gray-600 max-w-5xl mx-auto mb-10">
+                        The Innovation Hub is your connection point to drive progress. We invite you to contribute through several key actions, whether you are looking to:
+                    </p>
+                    
+                    <div class="max-w-5xl mx-auto text-lg text-gray-800 space-y-6 md:space-y-0 md:flex justify-center divide-x divide-gray-300">
+                        <div class="flex-1 flex items-center space-x-2 text-center p-4 md:px-6">
+                            <span class="text-2xl text-deep-teal hidden md:inline-block">👥</span>
+                            <p class="text-base text-left md:text-center"><b>Participate:</b> Solve challenges, signal problems, or propose solutions.</p>
+                        </div>
+                        <div class="flex-1 flex items-center space-x-2 text-center p-4 md:px-6">
+                            <span class="text-2xl text-coral-red hidden md:inline-block">💰</span>
+                            <p class="text-base text-left md:text-center"><b>Gain Support:</b> Get access to funding and become part of a network.</p>
+                        </div>
+                        <div class="flex-1 flex items-center space-x-2 text-center p-4 md:px-6">
+                            <span class="text-2xl text-slate-gray hidden md:inline-block">🤝</span>
+                            <p class="text-base text-left md:text-center"><b>Partner:</b> Formalize collaboration agreements.</p>
+                        </div>
+                    </div>
+                    
+
+                    <h3 class="text-2xl font-bold text-gray-800 text-center mt-12">
+                        Choose Your Pathway to Impact
+                    </h3>
+                </div>
+                
+                <div class="grid md:grid-cols-3 gap-8">
+
+                    <div class="bg-card-bg p-8 rounded-xl shadow-lg border-t-4 border-deep-teal transform transition duration-300 hover:shadow-2xl flex flex-col h-full">
+                        <div class="flex-grow"> 
+                            <div class="text-5xl mb-4 text-deep-teal flex justify-center">🚀</div>
+                            <h3 class="text-2xl font-semibold text-deep-teal mb-3 text-center">Solve Open Challenges</h3>
+                            <p class="text-gray-600 mb-6">
+                                Propose a solution to an existing, publicly announced problem. This is the primary route to secure <b>funding</b> and a <b>formal partnership</b> to implement your solution.
+                            </p>
+                            <div class="mb-6 text-sm text-gray-500 italic border-l-2 border-deep-teal pl-3">
+                                <p>Note: ...</p>
+                            </div>
+                        </div>
+                        <a onclick="showView('challenges')" class="action-button inline-block w-full text-center py-3 px-6 bg-deep-teal text-white font-semibold rounded-lg hover:bg-cyan-teal mt-4">
+                            View Active Challenges
+                        </a>
+                    </div>
+
+                    <div class="bg-card-bg p-8 rounded-xl shadow-lg border-t-4 border-slate-gray transform transition duration-300 hover:shadow-2xl flex flex-col h-full">
+                        <div class="flex-grow">
+                            <div class="text-5xl mb-4 text-slate-gray flex justify-center">⚠️</div>
+                            <h3 class="text-2xl font-semibold text-deep-teal mb-3 text-center">Signal a Problem / Need</h3>
+                            <p class="text-gray-600 mb-6">
+                                Define a problem or shortcoming that needs attention. You don’t need to solve it or take it on—just help clarify the problem or root cause.
+                            </p>
+                            <div class="mb-6 text-sm text-gray-500 italic border-l-2 border-slate-gray pl-3">
+                                <p>Note: ...</p>
+                            </div>
+                        </div>
+                        <a onclick="showView('problem')" class="action-button inline-block w-full text-center py-3 px-6 bg-slate-gray text-white font-semibold rounded-lg hover:bg-gray-600 mt-4">
+                            Submit Problem Statement
+                        </a>
+                    </div>
+
+                    <div class="bg-card-bg p-8 rounded-xl shadow-lg border-t-4 border-coral-red transform transition duration-300 hover:shadow-2xl flex flex-col h-full">
+                        <div class="flex-grow">
+                            <div class="text-5xl mb-4 text-coral-red flex justify-center">💡</div>
+                            <h3 class="text-2xl font-semibold text-deep-teal mb-3 text-center">Share an Idea</h3>
+                            <p class="text-gray-600 mb-6">
+                                Propose a solution-oriented idea - whether it’s a hypothesis, a concept you’ve seen succeed elsewhere, something you wish existed, or even a demonstration or proof of concept of your own solution.
+                            </p>
+                            <div class="mb-6 text-sm text-gray-500 italic border-l-2 border-coral-red pl-3">
+                                <p>Note: Priority focus and investment are directed towards solutions addressing established capability gaps. Additional ideas are welcome but should not divert attention from these priorities.</p>
+                            </div>
+                        </div>
+                        <a onclick="showView('idea')" class="action-button inline-block w-full text-center py-3 px-6 bg-coral-red text-white font-semibold rounded-lg hover:bg-red-600 mt-4">
+                            Submit Idea / Solution
+                        </a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+                <div class="text-center mt-16 md:mt-24">
+                    <h3 class="text-xl font-bold text-deep-teal mb-4">
+                        Need Guidance?
+                    </h3>
+                    <p class="text-gray-600 max-w-3xl mx-auto mb-6">
+                        Understand each step of our innovation process — from needs to implementation.
+                    </p>
+                    <div class="inline-block p-4 bg-card-bg rounded-lg shadow-md border-t-2 border-deep-teal">
+                        <details>
+                            <summary class="font-semibold text-deep-teal cursor-pointer hover:text-cyan-teal">
+                                Click to view the process & our guidebook
+                            </summary>
+                            <div class="mt-4 text-sm text-gray-700 text-left space-y-3">
+                                <p>...</p>
+                                <div class="border-t mt-3 pt-2">
+                                    
+                                </div>
+                            </div>
+                        </details>
+                    </div>
+                </div>
+            </div>
+
+            <section class="bg-card-bg border-t border-b py-12 mt-16">
+                <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+                    <h3 class="text-2xl font-bold text-deep-teal mb-4">Are you in the Industry Sector?</h3>
+                    <p class="text-lg text-gray-600 mb-6">
+                        <b>Collaboration:</b> "If you work in the industry sector and are interested in a collaboration, please feel free to contact us via the form below."
+                    </p>
+                    <a href="https://www.mil.be/nl/contacteer-ons/contactformulier-industrie/" target="_blank" class="action-button inline-block py-3 px-8 bg-coral-red text-white font-semibold rounded-lg hover:bg-red-600">
+                        Collaborate
+                    </a>
+                </div>
+            </section>
+        </section> 
+
+        <section id="challenges-view" class="view hidden py-16 sm:py-24">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 bg-card-bg p-8 rounded-xl shadow-lg">
+                <a onclick="showView('home')" class="text-deep-teal hover:underline mb-4 inline-block font-semibold">
+                    &larr; Back to Pathways
+                </a>
+                <h2 class="text-4xl font-extrabold text-deep-teal mb-6 border-b pb-2">
+                    Active Challenges & Calls for Solutions
+                </h2>
+                <p class="text-lg text-gray-600 mb-8">
+                    These are our currently defined capability gaps. We invite staff and external partners to propose innovative solutions. Successful proposals will be eligible for direct funding and formal partnership agreements.
+                </p>
+
+                <div class="bg-off-white p-4 rounded-lg mb-8 border-l-4 border-deep-teal">
+                    <details>
+                        <summary class="font-semibold text-deep-teal cursor-pointer">
+                            Tips & Guidance: How to Approach a Challenge
+                        </summary>
+                        <div class="mt-3 text-sm text-gray-700 space-y-2">
+                            <p class="font-bold text-deep-teal">🎯 Focus:</p>
+                            <ul class="list-disc list-inside ml-4 space-y-1">
+                                <li>**Consult the Innovation Navigator Guidebook** for tools to structure your solution.</li>
+                                <li>Frame your proposed solution with a clear **'How Might We'** statement.</li>
+                            </ul>
+                            <p class="font-bold text-deep-teal mt-2">💡 Note:</p>
+                            <ul class="list-disc list-inside ml-4 space-y-1">
+                                <li>Your solution must directly address the specific capability gap defined in the challenge.</li>
+                                <li>Look for training opportunities to learn how to use the full innovation toolkit.</li>
+                            </ul>
+                        </div>
+                    </details>
+                </div>
+                <div class="space-y-6">
+                    <div class="border p-4 rounded-lg bg-off-white flex flex-col">
+                        <div class="flex-grow">
+                            <h4 class="text-xl font-bold text-deep-teal">Challenge 1: Real-time Data Dissemination Architecture</h4>
+                            <p class="text-gray-700 mt-1"><b>How Might We:</b> Streamline data distribution to reduce latency in field units?</p>
+                            <p class="text-sm text-gray-500 mt-2 mb-4">We require a scalable, secure framework to rapidly distribute classified and unclassified data streams to remote field units with low latency and high reliability.</p>
+                        </div>
+                        <div class="flex justify-between items-center pt-2 border-t border-gray-200 mt-4">
+                             <a href="#clarification-form" class="action-button inline-block text-sm py-2 px-4 bg-slate-gray text-white font-semibold rounded-lg hover:bg-gray-600">
+                                💬 Ask Clarification Question
+                            </a>
+                            <a onclick="showView('idea')" class="text-coral-red hover:underline font-semibold inline-block">Propose Solution &rarr;</a>
+                        </div>
+                    </div>
+
+                    <div class="border p-4 rounded-lg bg-off-white flex flex-col">
+                        <div class="flex-grow">
+                            <h4 class="text-xl font-bold text-deep-teal">Challenge 2: Automated Threat Analysis Model</h4>
+                            <p class="text-gray-700 mt-1"><b>How Might We:</b> Automate the identification of anomalous patterns in large text datasets?</p>
+                            <p class="text-sm text-gray-500 mt-2 mb-4">Develop a machine learning model capable of identifying anomalous patterns in large text datasets and assigning a probability score for potential threats, reducing manual review time by 40%.</p>
+                        </div>
+                        <div class="flex justify-between items-center pt-2 border-t border-gray-200 mt-4">
+                             <a href="#clarification-form" class="action-button inline-block text-sm py-2 px-4 bg-slate-gray text-white font-semibold rounded-lg hover:bg-gray-600">
+                                💬 Ask Clarification Question
+                            </a>
+                            <a onclick="showView('idea')" class="text-coral-red hover:underline font-semibold inline-block">Propose Solution &rarr;</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="problem-view" class="view hidden py-16 sm:py-24">
+            <div class="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8 bg-card-bg p-8 rounded-xl shadow-lg">
+                <a onclick="showView('home')" class="text-deep-teal hover:underline mb-4 inline-block font-semibold">
+                    &larr; Back to Pathways
+                </a>
+                <h2 class="text-4xl font-extrabold text-deep-teal mb-6 border-b pb-2">
+                    Signal a Problem or Shortcoming
+                </h2>
+                <p class="text-lg text-gray-600 mb-8">
+                    Use this form to define a gap, root cause, or need you've identified. <b>No solution is required</b>—simply articulate the problem accurately.
+                </p>
+
+                <div class="bg-off-white p-4 rounded-lg mb-8 border-l-4 border-slate-gray">
+                    <details>
+                        <summary class="font-semibold text-deep-teal cursor-pointer">
+                            Tips & Guidance: How to Formulate a Problem Statement
+                        </summary>
+                        <div class="mt-3 text-sm text-gray-700 space-y-2">
+                            <p class="font-bold text-slate-gray">Define the Problem (Questions 1-5):</p>
+                            <ul class="list-disc list-inside ml-4 space-y-1">
+                                <li>Focus on the **symptom** and the **underlying root cause**.</li>
+                                <li>Clearly describe the **consequences** (wasted effort, delays, data loss).</li>
+                            </ul>
+                            <p class="font-bold text-slate-gray mt-2">Find the Opportunity (Question 6):</p>
+                            <ul class="list-disc list-inside ml-4 space-y-1">
+                                <li>Try to rephrase your problem into a positive, action-oriented **'How Might We'** question.</li>
+                            </ul>
+                            <p class="font-bold text-slate-gray mt-2">Next Steps:</p>
+                            <ul class="list-disc list-inside ml-4 space-y-1">
+                                <li>After submitting, we encourage you to check the **Active Challenges** page.</li>
+                            </ul>
+                        </div>
+                    </details>
+                </div>
+                <form onsubmit="alert('Problem Statement Submitted! Uw melding is ontvangen.'); showView('home'); return false;" class="space-y-6">
+
+                    <fieldset>
+                        <legend class="text-2xl font-bold text-deep-teal mb-4 border-b pb-2">Problem Definition & Context</legend>
+
+                        <div>
+                            <label for="category" class="block text-sm font-medium text-gray-700">1. Problem Category <b>(Required)</b></label>
+                            <select id="category" name="category" required class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-deep-teal focus:border-deep-teal sm:text-sm rounded-md shadow-sm">
+                                <option value="">Select a Category...</option>
+                                <option value="analysis">Analysis</option>
+                                <option value="collection">Collection</option>
+                                <option value="management">Management</option>
+                                <option value="data">Data</option>
+                                <option value="preparation">Preparation</option>
+                                <option value="dissemination">Dissemination</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label for="problem-title" class="block text-sm font-medium text-gray-700">2. Problem Title <b>(Required)</b></label>
+                            <input type="text" id="problem-title" name="problem-title" required class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-3" placeholder="A concise, descriptive title for the problem">
+                        </div>
+
+
+                        <div>
+                            <label for="problem-definition" class="block text-sm font-medium text-gray-700">3. Problem Definition / Root Cause <b>(Required)</b></label>
+                            <p class="text-xs text-gray-500 mb-1">"What's happening and why is it a problem?" &rarr; Describe the symptom and, if known, the underlying cause.</p>
+                            <textarea id="problem-definition" name="problem-definition" rows="5" required class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-3" placeholder="Clearly define the problem or its root cause..."></textarea>
+                        </div>
+
+                        <div>
+                            <label for="impact" class="block text-sm font-medium text-gray-700">4. Impact <b>(Required)</b></label>
+                            <p class="text-xs text-gray-500 mb-1">"What's the consequence?" (e.g., effort wasted, service delays, data loss)</p>
+                            <textarea id="impact" name="impact" rows="3" required class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-3" placeholder="Describe the consequences of the problem..."></textarea>
+                        </div>
+                        
+                        <div>
+                            <label for="problem-who-affected" class="block text-sm font-medium text-gray-700">5. Who's affected? <b>(Required)</b></label>
+                            <p class="text-xs text-gray-500 mb-2">Does your idea affect the entire organization?</p>
+                            <select id="problem-who-affected" name="who-affected" required class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-slate-gray focus:border-slate-gray sm:text-sm rounded-md shadow-sm">
+                                <option value="">Select scope…</option>
+                                <option value="one-component">One Component</option>
+                                <option value="more-than-one">More than one Component</option>
+                                <option value="whole-defense">The whole Defense</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label for="problem-affected-component" class="block text-sm font-medium text-gray-700">6. Who's mostly affected? <b>(Required)</b></label>
+                            <select id="problem-affected-component" name="affected-component" required class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-slate-gray focus:border-slate-gray sm:text-sm rounded-md shadow-sm">
+                                <option value="">Select Component...</option>
+                                <option value="medical">Medical</option>
+                                <option value="land">Land</option>
+                                <option value="air">Air</option>
+                                <option value="navy">Navy</option>
+                                <option value="cyber">Cyber</option>
+								<option value="...">...</option>
+                            </select>
+                        </div>
+                        </fieldset>
+                    <div>
+                        <label for="potential-solution" class="block text-sm font-medium text-gray-700">7. Optional: Solution Hint / Ideas</label>
+                        <p class="text-xs text-gray-500 mb-1">"Do you already see a possible fix or mitigation?"</p>
+                        <textarea id="potential-solution" name="potential-solution" rows="3" class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-3" placeholder="Provide any existing ideas or hypotheses..."></textarea>
+                    </div>
+                    
+                    <div>
+                        <label for="how-might-we" class="block text-sm font-medium text-gray-700">8. Optional: ‘How might we…’ Formulation</label>
+                        <p class="text-xs text-gray-500 mb-1">"Rephrase your problem as an opportunity for improvement."</p>
+                        <input type="text" id="how-might-we" name="how-might-we" class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-3" placeholder="E.g., How might we streamline data collection to reduce human error?">
+                    </div>
+
+                    <fieldset>
+                        <legend class="text-2xl font-bold text-deep-teal mb-4 border-b pb-2">Your Contact & Affiliation</legend>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            
+                            <div>
+                                <label for="problem-first-name" class="block text-sm font-medium text-gray-700">9. First Name <b>(Required)</b></label>
+                                <input type="text" id="problem-first-name" name="first-name" required class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-3">
+                            </div>
+
+                            <div>
+                                <label for="problem-last-name" class="block text-sm font-medium text-gray-700">10. Last Name <b>(Required)</b></label>
+                                <input type="text" id="problem-last-name" name="last-name" required class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-3">
+                            </div>
+                            
+                            <div class="md:col-span-2">
+                                <label for="problem-affiliation" class="block text-sm font-medium text-gray-700">11. Are you part of Belgian Defence or not? <b>(Required)</b></label>
+                                <select id="problem-affiliation" name="affiliation" required class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-slate-gray focus:border-slate-gray sm:text-sm rounded-md shadow-sm">
+                                    <option value="">Select Affiliation...</option>
+                                    <option value="defence">Defence</option>
+                                    <option value="external">External</option>
+                                </select>
+                            </div>
+
+                            <div class="md:col-span-2">
+                                <label for="problem-defence-organization" class="block text-sm font-medium text-gray-700">12. Which organization of the Defense are you part of? (If Defence)</label>
+                                <select id="problem-defence-organization" name="defence-organization" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-slate-gray focus:border-slate-gray sm:text-sm rounded-md shadow-sm">
+                                    <option value="">Select Organization (Optional)</option>
+                                    <option value="component">Component</option>
+                                    <option value="staff-departments">Staff Departments</option>
+                                    <option value="general-directorate">General Directorate</option>
+                                </select>
+                            </div>
+
+                            <div class="md:col-span-2">
+                                <label for="problem-defence-component" class="block text-sm font-medium text-gray-700">13. Which Component? (If applicable)</label>
+                            <select id="problem-defence-component" name="defence-component" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-slate-gray focus:border-slate-gray sm:text-sm rounded-md shadow-sm">
+                                <option value="">Select Component (Optional)</option>
+                                <option value="medical">Medical</option>
+                                <option value="land">Land</option>
+                                <option value="air">Air</option>
+                                <option value="navy">Navy</option>
+                                <option value="cyber">Cyber</option>
+                            </select>
+                            </div>
+
+                            <div class="md:col-span-2">
+                                <label for="problem-email" class="block text-sm font-medium text-gray-700">14. Email <b>(Required)</b></label>
+                                <p class="text-xs text-gray-500 mb-1">If you are employed by the Belgian Defence, please provide your official work e-mail address. (e.g., john.doe@organisation.com)</p>
+                                <input type="email" id="problem-email" name="email" required class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-3">
+                            </div>
+
+                            <div class="md:col-span-2">
+                                <label for="problem-role" class="block text-sm font-medium text-gray-700">15. Job Title - Role <b>(Required)</b></label>
+                                <input type="text" id="problem-role" name="job-role" required class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-3">
+                            </div>
+                        </div>
+                    </fieldset>
+                    <button type="submit" class="action-button w-full py-3 px-4 bg-slate-gray text-white font-semibold rounded-lg hover:bg-gray-600">
+                        Submit Problem Statement
+                    </button>
+                </form>
+            </div>
+        </section> 
+
+        <section id="idea-view" class="view hidden py-16 sm:py-24">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 bg-card-bg p-8 rounded-xl shadow-lg">
+                <a onclick="showView('home')" class="text-coral-red hover:underline mb-4 inline-block font-semibold">
+                    &larr; Back to Pathways
+                </a>
+                <h2 class="text-4xl font-extrabold text-deep-teal mb-2">
+                    Idea Submission Form
+                </h2>
+                <h3 class="text-2xl font-semibold text-gray-600 mb-6 border-b pb-2">
+                    🌟 Welcome to the Innovation Idea Submission Form! 🌟
+                </h3>
+
+                <p class="text-lg text-gray-600 mb-8">
+                    Innovation is the driving force at Innovation for Defense. Your input is invaluable for progress, whether you're an internal team member or an external visionary. We welcome diverse perspectives to fuel our creative engine.
+                </p>
+
+                <div class="bg-off-white p-4 rounded-lg mb-8 border-l-4 border-coral-red">
+                    <details>
+                        <summary class="font-semibold text-deep-teal cursor-pointer">
+                            Tips & Guidance: How to Formulate a Winning Idea
+                        </summary>
+                        <div class="mt-3 text-sm text-gray-700 space-y-2">
+                            <p class="font-bold text-coral-red">Idea Development Tips:</p>
+                            <ul class="list-disc list-inside ml-4 space-y-1">
+                                <li>Investigate how your idea aligns with real-world needs and feasibility.</li>
+                                <li>Clearly define the **Problem Definition** (Question 1), **Impact** (Question 2), and the **Goal** of your solution (Question 4).</li>
+                                <li>Visualize the necessary resources, timelines, and potential partnerships (Execution section).</li>
+                            </ul>
+                            <p class="font-bold text-coral-red mt-2">Priority Note:</p>
+                            <ul class="list-disc list-inside ml-4 space-y-1">
+                                <li>While all ideas are welcome, priority investment is directed towards solutions addressing established **Active Challenges**.</li>
+                            </ul>
+                        </div>
+                    </details>
+                </div>
+                <form id="idea-submission-form" onsubmit="alert('Idea Submitted! Thank you for your concept.'); showView('home'); return false;" class="space-y-8">
+                    
+                    <fieldset>
+                        <legend class="text-2xl font-bold text-deep-teal mb-4 border-b pb-2">Idea Concept & Impact</legend>
+
+                        <div>
+                            <label for="idea-problem-definition" class="block text-sm font-medium text-gray-700">1. Problem Definition / Root Cause <b>(Required)</b></label>
+                            <p class="text-xs text-gray-500 mb-1">"What's happening and why is it a problem?" &rarr; Describe the symptom and, if known, the underlying cause.</p>
+                            <textarea id="idea-problem-definition" name="idea-problem-definition" rows="5" required class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-3" placeholder="Clearly define the problem or its root cause..."></textarea>
+                        </div>
+						<div>
+                            <label for="idea-impact" class="block text-sm font-medium text-gray-700">2. Impact <b>(Required)</b></label>
+                            <p class="text-xs text-gray-500 mb-1">"What's the consequence?" (e.g., effort wasted, service delays, data loss)</p>
+                            <textarea id="idea-impact" name="impact" rows="3" required class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-3" placeholder="Describe the consequences of the problem..."></textarea>
+                        </div>
+                        <div>
+                            <label for="who-affected" class="block text-sm font-medium text-gray-700">3. Who's affected? <b>(Required)</b></label>
+                            <p class="text-xs text-gray-500 mb-2">Does your idea affect the entire organization?</p>
+                            <select id="who-affected" name="who-affected" required class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-slate-gray focus:border-slate-gray sm:text-sm rounded-md shadow-sm">
+                                <option value="">Select scope…</option>
+                                <option value="one-component">One Component</option>
+                                <option value="more-than-one">More than one Component</option>
+                                <option value="whole-defense">The whole Defense</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label for="affected-component" class="block text-sm font-medium text-gray-700">4. Who's mostly affected? <b>(Required)</b></label>
+                            <select id="affected-component" name="affected-component" required class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-slate-gray focus:border-slate-gray sm:text-sm rounded-md shadow-sm">
+                                <option value="">Select Component...</option>
+                                <option value="medical">Medical</option>
+                                <option value="land">Land</option>
+                                <option value="air">Air</option>
+                                <option value="navy">Navy</option>
+                                <option value="cyber">Cyber</option>
+                            </select>
+                        </div>
+                        <div>
+                            <label for="idea-title" class="block text-sm font-medium text-gray-700">5. Give a title to your idea <b>(Required)</b></label>
+                            <p class="text-xs text-gray-500 mb-1">The title answers the question: what it does and for whom?</p>
+                            <input type="text" id="idea-title" name="idea-title" required class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-3">
+                        </div>
+
+                        <div>
+                            <label for="full-concept" class="block text-sm font-medium text-gray-700">6. Explain the full concept <b>(Required)</b></label>
+                            <p class="text-xs text-gray-500 mb-1">
+                                What's your idea (the missing piece of the puzzle)? What is absent/incomplete in the current state, as opposed to the existing situation? What's the goal of the project (how does the solution benefit users)?
+                            </p>
+                            <textarea id="full-concept" name="full-concept" rows="6" required class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-3"></textarea>
+                        </div>
+						<div>
+                            <label for="how-it-works" class="block text-sm font-medium text-gray-700">7. How does it work and what are the key features of the solution? <b>(Required)</b></label>
+                            <textarea id="how-it-works" name="how-it-works" rows="4" required class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-3"></textarea>
+                        </div>
+
+                        <div>
+                            <label for="future-potential" class="block text-sm font-medium text-gray-700">8. What's the future potential? <b>(Required)</b></label>
+                            <textarea id="future-potential" name="future-potential" rows="3" required class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-3"></textarea>
+                        </div>
+                        
+                    </fieldset>
+
+                    <fieldset>
+                        <legend class="text-2xl font-bold text-deep-teal mb-4 border-b pb-2">Urgency</legend>
+                        
+                        <div>
+                            <label for="critical-point" class="block text-sm font-medium text-gray-700">9. Are we at a critical point where not acting now could make things significantly worse? <b>(Required)</b></label>
+                            <select id="critical-point" name="critical-point" required class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-slate-gray focus:border-slate-gray sm:text-sm rounded-md shadow-sm">
+                                <option value="">Select Urgency Level...</option>
+                                <option value="1">1. The current status quo is not an issue</option>
+                                <option value="2">2. It needs resolving, but not urgently</option>
+                                <option value="3">3. Something must be done right away</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label for="justify-urgency" class="block text-sm font-medium text-gray-700">10. Please justify the urgency</label>
+                            <input type="text" id="justify-urgency" name="justify-urgency" class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-3" placeholder="Explain why this needs to be resolved right away, if applicable.">
+                        </div>
+                    </fieldset>
+
+                    <fieldset>
+                        <legend class="text-2xl font-bold text-deep-teal mb-4 border-b pb-2">Execution & Budget</legend>
+                        
+                        
+
+                        <div>
+                            <label for="how-to-realize" class="block text-sm font-medium text-gray-700">11. How do you want to realize the idea and what resources do you need? <b>(Required)</b></label>
+                            <textarea id="how-to-realize" name="how-to-realize" rows="4" required class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-3"></textarea>
+                        </div>
+
+                        <div>
+                            <label for="expected-timing" class="block text-sm font-medium text-gray-700">12. What is the expected timing for your project? <b>(Required)</b></label>
+                            <p class="text-xs text-gray-500 mb-1">How long will it take to realize the project? Give an estimate.</p>
+                            <input type="text" id="expected-timing" name="expected-timing" required class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-3" placeholder="E.g., 6-9 months, 1 year MVP">
+                        </div>
+
+                        <div>
+                            <label for="estimated-budget" class="block text-sm font-medium text-gray-700">13. What is the estimated budget in €? <b>(Required)</b></label>
+                            <select id="estimated-budget" name="estimated-budget" required class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-slate-gray focus:border-slate-gray sm:text-sm rounded-md shadow-sm">
+                                <option value="">Select Budget Range...</option>
+                                <option value="1">1. Under € 2,500</option>
+                                <option value="2">2. € 2,500 - € 5,500</option>
+                                <option value="3">3. € 5,500 - € 30,000</option>
+                                <option value="4">4. More than € 30,000</option>
+                            </select>
+                        </div>
+                    </fieldset>
+                    
+                    <fieldset>
+                        <legend class="text-2xl font-bold text-deep-teal mb-4 border-b pb-2">Your Contact & Affiliation</legend>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            
+                            <div>
+                                <label for="idea-first-name" class="block text-sm font-medium text-gray-700">14. First Name <b>(Required)</b></label>
+                                <input type="text" id="idea-first-name" name="first-name" required class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-3">
+                            </div>
+
+                            <div>
+                                <label for="idea-last-name" class="block text-sm font-medium text-gray-700">15. Last Name <b>(Required)</b></label>
+                                <input type="text" id="idea-last-name" name="last-name" required class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-3">
+                            </div>
+                            
+                            <div class="md:col-span-2">
+                                <label for="affiliation" class="block text-sm font-medium text-gray-700">16. Are you part of Belgian Defence or not? <b>(Required)</b></label>
+                                <select id="affiliation" name="affiliation" required class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-slate-gray focus:border-slate-gray sm:text-sm rounded-md shadow-sm">
+                                    <option value="">Select Affiliation...</option>
+                                    <option value="defence">Defence</option>
+                                    <option value="external">External</option>
+                                </select>
+                            </div>
+
+                            <div class="md:col-span-2">
+                                <label for="defence-organization" class="block text-sm font-medium text-gray-700">17. Which organization of the Defense are you part of? (If Defence)</label>
+                                <select id="defence-organization" name="defence-organization" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-slate-gray focus:border-slate-gray sm:text-sm rounded-md shadow-sm">
+                                    <option value="">Select Organization (Optional)</option>
+                                    <option value="component">Component</option>
+                                    <option value="staff-departments">Staff Departments</option>
+                                    <option value="general-directorate">General Directorate</option>
+                                </select>
+                            </div>
+
+                            <div class="md:col-span-2">
+                                <label for="defence-component" class="block text-sm font-medium text-gray-700">18. Which Component? (If applicable)</label>
+                            <select id="defence-component" name="defence-component" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-slate-gray focus:border-slate-gray sm:text-sm rounded-md shadow-sm">
+                                <option value="">Select Component (Optional)</option>
+                                <option value="medical">Medical</option>
+                                <option value="land">Land</option>
+                                <option value="air">Air</option>
+                                <option value="navy">Navy</option>
+                                <option value="cyber">Cyber</option>
+                            </select>
+                            </div>
+
+                            <div class="md:col-span-2">
+                                <label for="idea-email" class="block text-sm font-medium text-gray-700">19. Email <b>(Required)</b></label>
+                                <p class="text-xs text-gray-500 mb-1">If you are employed by the Belgian Defence, please provide your official work e-mail address. (e.g., john.doe@organisation.com)</p>
+                                <input type="email" id="idea-email" name="email" required class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-3">
+                            </div>
+
+                            <div class="md:col-span-2">
+                                <label for="idea-role" class="block text-sm font-medium text-gray-700">20. Job Title - Role <b>(Required)</b></label>
+                                <input type="text" id="idea-role" name="job-role" required class="mt-1 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md p-3">
+                            </div>
+                        </div>
+                    </fieldset>
+                    <button type="submit" class="action-button w-full py-3 px-4 bg-coral-red text-white font-semibold rounded-lg hover:bg-red-600">
+                        Submit Idea
+                    </button>
+                </form>
+            </div>
+        </section> 
+
+    </main>
+    
+    <footer class="bg-deep-teal text-white py-12">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <p class="text-sm opacity-75">
+                © 2025 Innovation & Development. All rights reserved.
+            </p>
+            <p class="mt-2 text-xs opacity-50">
+                Positioning: Open to Internal Staff & External Parties.
+            </p>
+        </div>
+    </footer>
+
+    <script>
+        /**
+         * Function to show a specific view and hide others.
+         * @param {string} viewName - The ID prefix of the view to show (e.g., 'home', 'challenges', 'problem', 'collaboration', 'idea').
+         */
+        function showView(viewName) {
+            document.querySelectorAll('.view').forEach(view => {
+                view.classList.add('hidden');
+            });
+            const targetView = document.getElementById(viewName + '-view');
+            if (targetView) {
+                targetView.classList.remove('hidden');
+                window.scrollTo({ top: 0, behavior: 'smooth' }); // Scroll to top on view change
+            }
+        }
+    </script>
+
+</body>
+</html>
