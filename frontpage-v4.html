@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Innovation for Defence: Driven by You (Option 2)</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    <style>
+        /* Custom colors from the user request */
+        .color-primary { --tw-bg-opacity: 1; background-color: #184552; } /* Dark Blue */
+        .color-secondary { --tw-bg-opacity: 1; background-color: #F4F1E8; } /* Light Beige */
+        .color-accent-1 { --tw-bg-opacity: 1; background-color: #E55a5a; } /* Red/Salmon */
+        .color-accent-2 { --tw-bg-opacity: 1; background-color: #008991; } /* Teal */
+        .color-accent-3 { --tw-bg-opacity: 1; background-color: #63A082; } /* Green */
+        .color-accent-4 { --tw-bg-opacity: 1; background-color: #8297a1; } /* Grey-Blue */
+        
+        .text-primary { color: #184552; }
+        .text-accent-1 { color: #E55a5a; }
+        .text-accent-2 { color: #008991; }
+        .text-accent-3 { color: #63A082; }
+        .text-accent-4 { color: #8297a1; }
+
+        .bg-accent-2 { background-color: #008991; } /* Explicit utility for teal buttons */
+        .bg-accent-1 { background-color: #E55a5a; } /* Explicit utility for red button */
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F4F1E8; /* Light Beige background */
+        }
+
+        .section-title {
+            position: relative;
+            /* Keep inline-block for precise underline positioning */
+            display: inline-block; 
+            padding-bottom: 8px;
+            font-size: 2.25rem;
+            font-weight: 700;
+            color: #184552;
+        }
+
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            /* Centering the underline for centered titles */
+            left: 50%;
+            transform: translateX(-50%);
+            width: 75px;
+            height: 4px;
+            background-color: #E55a5a;
+            border-radius: 9999px;
+        }
+        
+        .flow-placeholder {
+            max-width: 100%;
+            height: auto;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05); /* shadow-xl */
+            display: block;
+            margin: 0 auto;
+        }
+
+        .faq-item {
+            transition: background-color 0.3s ease;
+        }
+        .faq-item:hover {
+            background-color: rgba(24, 69, 82, 0.05); /* Slight hover for interaction */
+        }
+        
+        /* Custom styles for mobile flow connector (small vertical line) */
+        .flow-step:not(:last-child)::after {
+            content: '';
+            position: absolute;
+            bottom: -2rem; /* Half the gap (space-y-8 is 2rem + 2rem = 4rem, so bottom needs half the full margin/gap) */
+            left: 50%;
+            transform: translateX(-50%);
+            width: 2px;
+            height: 2rem;
+            background-color: #8297a1; /* Grey-Blue/Accent-4 for connectors */
+            /* Hide on desktop, where we use the horizontal flow line */
+            display: block;
+        }
+        @media (min-width: 768px) {
+            .flow-step:not(:last-child)::after {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Navigation (Placeholder - Minimalist) -->
+    <header class="bg-white shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+            <div class="text-xl font-bold text-primary">Inno4Def</div>
+            <nav class="hidden md:flex space-x-4">
+                <a href="#what-is" class="text-primary hover:text-accent-1 font-medium">What Is I4D?</a>
+                <a href="#why-we-need" class="text-primary hover:text-accent-1 font-medium">Why I4D?</a>
+                <a href="#who-is-it-for" class="text-primary hover:text-accent-1 font-medium">For Who?</a>
+                <a href="#cases" class="text-primary hover:text-accent-1 font-medium">Cases</a>
+            </nav>
+            <button class="bg-primary text-white px-4 py-2 rounded-lg hover:bg-opacity-90 transition duration-300">Join</button>
+        </div>
+    </header>
+
+    <!-- 1. Main Banner -->
+    <section class="color-primary py-24 md:py-32 text-white">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="text-center">
+                <h1 class="text-4xl sm:text-6xl font-extrabold mb-6 leading-tight">
+                    Innovation for Defence: <br><span class="text-color-accent-1">Driven by you.</span>
+                </h1>
+                <p class="max-w-3xl mx-auto text-xl font-light mb-12 opacity-90">
+                    Our agility starts on the ground. We capture and execute the best bottom-up ideas from our people, rapidly integrating new solutions. This collective approach secures our technological edge, strengthens our Defence-Nation link, and positions Belgian Defence effectively against global threats.
+                </p>
+                <!-- Buttons updated to use the Teal background color-accent-2 (#008991) -->
+                <div class="flex flex-col sm:flex-row justify-center space-y-4 sm:space-y-0 sm:space-x-4">
+                    <button class="bg-accent-2 text-white font-bold px-8 py-3 rounded-xl shadow-lg hover:bg-opacity-80 transition duration-300 transform hover:scale-[1.02]">
+                        What is Inno4Def
+                    </button>
+                    <button class="bg-accent-2 text-white font-bold px-8 py-3 rounded-xl shadow-lg hover:bg-opacity-80 transition duration-300 transform hover:scale-[1.02]">
+                        Why does it exist
+                    </button>
+                    <button class="bg-accent-2 text-white font-bold px-8 py-3 rounded-xl shadow-lg hover:bg-opacity-80 transition duration-300 transform hover:scale-[1.02]">
+                        Who is it for
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <main class="max-w-7xl mx-auto px-6 lg:px-8 py-16">
+
+        <!-- 2. Featured Event Section (New Large Design) -->
+        <section id="event" class="mb-24 bg-white p-6 md:p-12 rounded-xl shadow-2xl border-t-4 border-color-accent-1">
+            <div class="grid lg:grid-cols-2 gap-12 items-center">
+                <!-- Event Image Placeholder (Left) -->
+                <div class="rounded-xl shadow-lg overflow-hidden h-64 md:h-96">
+                    <img src="https://placehold.co/800x600/184552/ffffff?text=Navy+Hackathon+2+Event" alt="Placeholder image for the Navy Hackathon 2 event" class="w-full h-full object-cover">
+                </div>
+                
+                <!-- Event Details (Right) -->
+                <div class="p-4">
+                    <span class="text-sm font-semibold uppercase tracking-wider text-color-accent-1 mb-2 block">Upcoming Event</span>
+                    <h2 class="text-4xl font-extrabold text-primary mb-4">Navy Hackathon 2   </h2>
+                    
+                    <p class="text-gray-600 mb-6 text-lg max-w-lg">
+                        Join the next iteration of our successful Navy Hackathon to rapidly prototype solutions for complex maritime challenges using the latest technologies. Your expertise can make a difference.
+                    </p>
+
+                    <div class="space-y-3 text-lg font-medium text-gray-700">
+                        <div class="flex items-center space-x-2">
+                            <span class="text-color-accent-2">📅</span>
+                            <p><strong>Date:</strong> March 2026</p>
+                        </div>
+                        <div class="flex items-center space-x-2">
+                            <span class="text-color-accent-2">📍</span>
+                            <p><strong>Location:</strong> TBC</p>
+                        </div>
+                    </div>
+                    
+                    <button class="bg-accent-1 text-white font-bold px-8 py-3 rounded-xl shadow-lg hover:bg-opacity-80 transition duration-300 transform hover:scale-[1.02] mt-8">
+                        Register Now
+                    </button>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 3. What is Innovation for Defence (Text Left, Visual Right) -->
+        <section id="what-is" class="mb-24">
+            <!-- Used items-stretch and h-full on the visual to match text height -->
+            <div class="grid lg:grid-cols-2 gap-12 items-stretch"> 
+                <!-- Text Content (Left) -->
+                <div>
+                    <h2 class="section-title mb-6">What is Innovation for Defence?</h2>
+                    <p class="text-gray-600 mb-4 text-lg">
+                        I4D is the dedicated internal program accelerating <strong>bottom-up, short-cycle innovation</strong> within Belgian Defence.
+                    </p>
+                    <p class="text-gray-600 mb-4 text-lg">
+                        Its core function is to ensure that the vital ideas and practical solutions generated by Belgian Defence’s operational teams in the field are quickly captured, systematically tested, and integrated into our daily operations.
+                    </p>
+                    <p class="text-gray-600 text-lg font-medium">
+                        We exist to provide the agility required to stay ahead in a rapidly changing technological and strategic environment.
+                    </p>
+                </div>
+                
+                <!-- Placeholder Visual (Right) - Adjusted to h-full to match text height -->
+                <div class="bg-white p-8 rounded-xl shadow-lg h-full min-h-64 flex items-center justify-center text-gray-400 font-semibold text-center border border-gray-200">
+                    <span class="text-xl">Visual Placeholder</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- 4. Why we need Inno4Def (Visual Left, Text Right) -->
+        <section id="why-we-need" class="mb-24">
+            <!-- Used items-stretch and h-full on the visual to match text height -->
+            <div class="grid lg:grid-cols-2 gap-12 items-stretch">
+                
+                <!-- Placeholder Visual (Left) - Adjusted to h-full -->
+                <div class="bg-white p-8 rounded-xl shadow-lg h-full min-h-64 flex items-center justify-center text-gray-400 font-semibold text-center border border-gray-200 order-2 lg:order-1">
+                    <span class="text-xl">Visual Placeholder</span>
+                </div>
+                
+                <!-- Text Content (Right) -->
+                <div class="order-1 lg:order-2">
+                    <h2 class="section-title mb-6">Why We Need Inno4Def: Adapting to Change</h2>
+                    <p class="text-gray-600 mb-4 text-lg">
+                        The operational environment is changing faster than ever. Technology moves quickly, merging civilian and military domains. To maintain our strength and ensure mission success, Belgian Defence must be <strong>agile and adaptive</strong>.
+                    </p>
+                    <p class="text-gray-600 mb-6 text-lg">
+                        I4D is not a top-down mandate; it's a dedicated pathway for <strong>empowering you</strong>. It ensures your critical insights and practical solutions are systematically turned into Defence-wide action.
+                    </p>
+                    <ul class="list-disc list-inside text-gray-700 space-y-2 ml-4 font-medium">
+                        <li>Integrate new solutions: Quickly trial and deploy technologies.</li>
+                        <li>Empower our people: Give every member a voice to improve operations.</li>
+                        <li>Stay Ahead: Remain at the forefront of operational readiness.</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+        
+        <!-- 5. Who is Inno4Def for? -->
+        <section id="who-is-it-for" class="mb-24">
+            <!-- Centered Title -->
+            <div class="text-center">
+                <h2 class="section-title mb-12">Who is Inno4Def for?</h2>
+            </div>
+            <p class="text-center max-w-4xl mx-auto text-gray-600 text-lg mb-12">
+                This is a direct appeal to <strong>everyone in Belgian Defence</strong> – your daily operational experience is our most valuable asset. We also collaborate with <strong>external partners</strong> who can accelerate our mission. Find your place in our innovation ecosystem:
+            </p>
+
+            <div class="grid md:grid-cols-4 gap-6 text-center">
+                <!-- Role 1 -->
+                <div class="p-6 bg-white rounded-xl shadow-xl border-t-4 border-color-accent-2 hover:shadow-2xl transition duration-300">
+                    <span class="text-4xl text-color-accent-2 mb-4 block">🔍</span>
+                    <h3 class="text-xl font-bold text-primary mb-2">The Problem Explorer</h3>
+                    <p class="text-sm text-gray-500">(Internal)</p>
+                    <p class="text-gray-600 mt-3">You have identified a crucial challenge or operational need, but you don't yet have a solution. You are ready to articulate the problem clearly.</p>
+                </div>
+                <!-- Role 2 -->
+                <div class="p-6 bg-white rounded-xl shadow-xl border-t-4 border-color-accent-3 hover:shadow-2xl transition duration-300">
+                    <span class="text-4xl text-color-accent-3 mb-4 block">💡</span>
+                    <h3 class="text-xl font-bold text-primary mb-2">The Idea Submitter </h3>
+                    <p class="text-sm text-gray-500">(Internal & External)</p>
+                    <p class="text-gray-600 mt-3">You have identified a problem and have devised a specific potential solution. You are ready to present your concept for review and execution.</p>
+                </div>
+                <!-- Role 3 -->
+                <div class="p-6 bg-white rounded-xl shadow-xl border-t-4 border-color-accent-1 hover:shadow-2xl transition duration-300">
+                    <span class="text-4xl text-color-accent-1 mb-4 block">🛠️</span>
+                    <h3 class="text-xl font-bold text-primary mb-2">The Problem Solver </h3>
+                    <p class="text-sm text-gray-500">(Internal & External)</p>
+                    <p class="text-gray-600 mt-3">You want to work on concrete, validated challenges, contributing expertise through training, hackathons, or dedicated projects.</p>
+                </div>
+                <!-- Role 4 -->
+                <div class="p-6 bg-white rounded-xl shadow-xl border-t-4 border-color-accent-4 hover:shadow-2xl transition duration-300">
+                    <span class="text-4xl text-color-accent-4 mb-4 block">🤝</span>
+                    <h3 class="text-xl font-bold text-primary mb-2">The Community Follower</h3>
+                    <p class="text-sm text-gray-500">(All)</p>
+                    <p class="text-gray-600 mt-3">You want to stay informed about all ongoing projects, challenges, events, and results within the I4D program.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- 6. Our Innovation Pathways (Simplified content to point to detail hub) -->
+        <section id="how-we-work" class="mb-24 bg-white p-6 md:p-12 rounded-xl shadow-2xl">
+            <!-- Centered Title -->
+            <div class="text-center">
+                <h2 class="section-title mb-12">How do we achieve our goals</h2>
+            </div>
+            
+            <p class="text-gray-600 text-lg mb-8 max-w-4xl mx-auto text-center">
+                We organize innovation into three distinct pathways (Need Identification, Idea Submission, and Challenge Solving). For full details on the required documentation and official forms for each pathway, please visit our dedicated Innovation Hub and navigate to the forms section.
+            </p>
+
+            <!-- New CTA replacing the three pathway cards -->
+            <div class="text-center mb-16">
+                <a href="#join" class="bg-accent-2 text-white font-bold px-8 py-3 rounded-xl shadow-lg hover:bg-opacity-80 transition duration-300 transform hover:scale-[1.02]">
+                    Go to the Innovation Hub & Forms
+                </a>
+            </div>
+
+            <!-- Boxed container for Innovation Process in 5 Steps (REMOVED FROM HERE) -->
+            <!-- Removing the div block: "Innovation Process in 5 Steps" -->
+            
+            <!-- Boxed container for Case Implementation Vehicles (Now Tiles) -->
+            <div class="mt-12 p-6 color-secondary rounded-xl shadow-lg border border-gray-200">
+                <h3 class="text-2xl font-bold text-primary mb-4 text-center">Case Implementation Vehicles</h3>
+                <p class="text-gray-600 text-lg mb-6 text-center max-w-4xl mx-auto">
+                    Implemented innovation cases can take many shapes, depending on the need and the solution. They are executed through dedicated vehicles like physical or digital sandboxes, specialized training, horizon scans, or large-scale events and hackathons.
+                </p>
+                
+                <!-- New Tiles Grid based on provided image -->
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4 md:gap-6 max-w-6xl mx-auto">
+                    
+                    <!-- Tile 1: Digital Sandbox -->
+                    <a href="#" class="relative block h-56 rounded-xl overflow-hidden shadow-lg transition duration-300 hover:shadow-xl group">
+                        <img src="https://placehold.co/400x400/184552/F4F1E8?text=Digital+Sandbox" alt="Digital Sandbox" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-primary bg-opacity-60 group-hover:bg-opacity-40 transition-colors duration-300"></div>
+                        <span class="absolute top-4 left-4 bg-white text-primary text-xs font-semibold px-3 py-1 rounded-full shadow-md">Digital Sandbox</span>
+                        <div class="absolute bottom-0 left-0 w-full p-4">
+                            <button class="bg-accent-1 text-white text-sm font-semibold px-4 py-2 rounded-lg shadow-md hover:bg-opacity-90">Learn more</button>
+                        </div>
+                    </a>
+
+                    <!-- Tile 2: Physical Sandbox -->
+                    <a href="#" class="relative block h-56 rounded-xl overflow-hidden shadow-lg transition duration-300 hover:shadow-xl group">
+                        <img src="https://placehold.co/400x400/8297a1/F4F1E8?text=Physical+Sandbox" alt="Physical Sandbox" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-primary bg-opacity-60 group-hover:bg-opacity-40 transition-colors duration-300"></div>
+                        <span class="absolute top-4 left-4 bg-white text-primary text-xs font-semibold px-3 py-1 rounded-full shadow-md">Physical Sandbox</span>
+                        <div class="absolute bottom-0 left-0 w-full p-4">
+                            <button class="bg-accent-1 text-white text-sm font-semibold px-4 py-2 rounded-lg shadow-md hover:bg-opacity-90">Learn more</button>
+                        </div>
+                    </a>
+                    
+                    <!-- Tile 3: Training -->
+                    <a href="#" class="relative block h-56 rounded-xl overflow-hidden shadow-lg transition duration-300 hover:shadow-xl group">
+                        <img src="https://placehold.co/400x400/63A082/F4F1E8?text=Training+Workshop" alt="Training" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-primary bg-opacity-60 group-hover:bg-opacity-40 transition-colors duration-300"></div>
+                        <span class="absolute top-4 left-4 bg-white text-primary text-xs font-semibold px-3 py-1 rounded-full shadow-md">Training</span>
+                        <div class="absolute bottom-0 left-0 w-full p-4">
+                            <button class="bg-accent-1 text-white text-sm font-semibold px-4 py-2 rounded-lg shadow-md hover:bg-opacity-90">Learn more</button>
+                        </div>
+                    </a>
+
+                    <!-- Tile 4: Horizon Scan -->
+                    <a href="#" class="relative block h-56 rounded-xl overflow-hidden shadow-lg transition duration-300 hover:shadow-xl group">
+                        <img src="https://placehold.co/400x400/008991/F4F1E8?text=Horizon+Scanning+Analysis" alt="Horizon Scan" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-primary bg-opacity-60 group-hover:bg-opacity-40 transition-colors duration-300"></div>
+                        <span class="absolute top-4 left-4 bg-white text-primary text-xs font-semibold px-3 py-1 rounded-full shadow-md">Horizon Scan</span>
+                        <div class="absolute bottom-0 left-0 w-full p-4">
+                            <button class="bg-accent-1 text-white text-sm font-semibold px-4 py-2 rounded-lg shadow-md hover:bg-opacity-90">Learn more</button>
+                        </div>
+                    </a>
+
+                    <!-- Tile 5: Events & Hackathons -->
+                    <a href="#" class="relative block h-56 rounded-xl overflow-hidden shadow-lg transition duration-300 hover:shadow-xl group">
+                        <img src="https://placehold.co/400x400/E55a5a/F4F1E8?text=Events+%26+Hackathons" alt="Events & Hackathons" class="absolute inset-0 w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+                        <div class="absolute inset-0 bg-primary bg-opacity-60 group-hover:bg-opacity-40 transition-colors duration-300"></div>
+                        <span class="absolute top-4 left-4 bg-white text-primary text-xs font-semibold px-3 py-1 rounded-full shadow-md">Events & Hackathons</span>
+                        <div class="absolute bottom-0 left-0 w-full p-4">
+                            <button class="bg-accent-1 text-white text-sm font-semibold px-4 py-2 rounded-lg shadow-md hover:bg-opacity-90">Learn more</button>
+                        </div>
+                    </a>
+                </div>
+            </div>
+        </section>
+
+        <!-- 7. Our Most Recent Cases (Background set to white, content updated) -->
+        <section id="cases" class="mb-24 bg-white p-6 md:p-12 rounded-xl shadow-2xl">
+            <!-- Centered Title -->
+            <div class="text-center">
+                <h2 class="section-title mb-12">Our Most Recent Cases</h2>
+            </div>
+
+            <div class="grid md:grid-cols-3 gap-8">
+                <!-- Case 1 -->
+                <div class="bg-color-secondary rounded-xl shadow-xl overflow-hidden hover:shadow-2xl transition duration-300">
+                    <img src="https://placehold.co/600x400/8297a1/ffffff?text=Physical+Sandbox" alt="Placeholder image for a recent case" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <span class="text-sm font-semibold uppercase tracking-wider px-3 py-1 rounded-full bg-color-accent-2 text-white">Physical Sandbox</span>
+                        <h3 class="text-xl font-bold text-primary mt-4 mb-2">Title 1</h3>
+                        <p class="text-gray-600 text-sm">Lorem ipsum dolor sit amet, consectetur adipiscing elit. Integer nec odio. Praesent libero. Sed cursus ante dapibus diam. Sed tempus feugiat nisl. Fusce et ligula. Mauris nulla. Cras massa. Vestibulum viverra nisl sit amet lectus.</p>
+                    </div>
+                </div>
+                <!-- Case 2 -->
+                <div class="bg-color-secondary rounded-xl shadow-xl overflow-hidden hover:shadow-2xl transition duration-300">
+                    <img src="https://placehold.co/600x400/184552/ffffff?text=Digital+Sandbox" alt="Placeholder image for a recent case" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <span class="text-sm font-semibold uppercase tracking-wider px-3 py-1 rounded-full bg-color-accent-3 text-white">Digital Sandbox</span>
+                        <h3 class="text-xl font-bold text-primary mt-4 mb-2">Title 2 </h3>
+                        <p class="text-gray-600 text-sm">Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam. Eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
+                    </div>
+                </div>
+                <!-- Case 3 -->
+                <div class="bg-color-secondary rounded-xl shadow-xl overflow-hidden hover:shadow-2xl transition duration-300">
+                    <img src="https://placehold.co/600x400/E55a5a/ffffff?text=Hackathon" alt="Placeholder image for a recent case" class="w-full h-48 object-cover">
+                    <div class="p-6">
+                        <span class="text-sm font-semibold uppercase tracking-wider px-3 py-1 rounded-full bg-color-accent-1 text-white">Hackathon</span>
+                        <h3 class="text-xl font-bold text-primary mt-4 mb-2">Title 3 </h3>
+                        <p class="text-gray-600 text-sm">Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="text-center mt-12">
+                <!-- Button background color confirmed as color-accent-2 (#008991) -->
+                <button class="bg-accent-2 text-white font-bold px-10 py-4 rounded-xl shadow-lg hover:bg-opacity-80 transition duration-300 transform hover:scale-105">
+                    View All Our Cases
+                </button>
+            </div>
+        </section>
+
+        <!-- 8. FAQ Section -->
+        <section id="faq" class="mb-24">
+            <!-- Centered Title -->
+            <div class="text-center">
+                <h2 class="section-title mb-12">Frequently Asked Questions</h2>
+            </div>
+            
+            <div class="space-y-4 max-w-4xl mx-auto">
+                <!-- FAQ 1 -->
+                <div class="faq-item bg-white p-6 rounded-xl shadow-md cursor-pointer">
+                    <h3 class="text-lg font-bold text-primary">What is a 'bottom-up' idea?</h3>
+                    <p class="text-gray-600 mt-2 hidden">A bottom-up idea is one that originates directly from personnel on the ground—those with daily operational experience—rather than being mandated from senior leadership (top-down).</p>
+                </div>
+                <!-- FAQ 2 -->
+                <div class="faq-item bg-white p-6 rounded-xl shadow-md cursor-pointer">
+                    <h3 class="text-lg font-bold text-primary">Who is on the Innovation Board?</h3>
+                    <p class="text-gray-600 mt-2 hidden">The Innovation Board is a group of dedicated Innovation Officers representing every component and staff level of Belgian Defence. They review, prioritize, and support the implementation of ideas.</p>
+                </div>
+                <!-- FAQ 3 -->
+                <div class="faq-item bg-white p-6 rounded-xl shadow-md cursor-pointer">
+                    <h3 class="text-lg font-bold text-primary">How quickly are ideas implemented?</h3>
+                    <p class="text-gray-600 mt-2 hidden">I4D focuses on 'short-cycle' innovation. While implementation speed varies, the process is designed to rapidly test and integrate solutions, often moving from concept to prototype faster than traditional procurement methods.</p>
+                </div>
+                <!-- FAQ 4 -->
+                <div class="faq-item bg-white p-6 rounded-xl shadow-md cursor-pointer">
+                    <h3 class="text-lg font-bold text-primary">Can external partners submit ideas?</h3>
+                    <p class="text-gray-600 mt-2 hidden">Yes, external partners are encouraged to submit solution ideas (The Idea Submitter profile) or engage with validated challenges (The Problem Solver profile).</p>
+                </div>
+            </div>
+
+            <div class="text-center mt-8">
+                <!-- Button color changed to bg-accent-2 (#008991) -->
+                <button class="bg-accent-2 text-white font-bold px-8 py-3 rounded-xl shadow-lg hover:bg-opacity-80 transition duration-300">
+                    View All FAQs
+                </button>
+            </div>
+            
+            <script>
+                // Simple JS for FAQ accordion behavior
+                document.querySelectorAll('.faq-item').forEach(item => {
+                    item.addEventListener('click', () => {
+                        const answer = item.querySelector('p');
+                        const isVisible = !answer.classList.contains('hidden');
+                        
+                        // Close all others
+                        document.querySelectorAll('.faq-item p').forEach(p => p.classList.add('hidden'));
+                        
+                        // Toggle current one
+                        if (isVisible) {
+                             answer.classList.add('hidden');
+                        } else {
+                             answer.classList.remove('hidden');
+                        }
+                    });
+                });
+            </script>
+        </section>
+
+        <!-- 9. Join Our Community Form (Updated Fields and Button Color) -->
+        <section id="join" class="py-16 color-primary rounded-xl shadow-2xl">
+            <div class="max-w-4xl mx-auto px-6 lg:px-8 text-center text-white">
+                <h2 class="text-3xl sm:text-4xl font-extrabold mb-4">Join Our Community</h2>
+                <p class="text-xl font-light mb-8 opacity-90">
+                    Want to be part of this and stay in the loop? Your daily experience is our most valuable asset. Connect with us!
+                </p>
+
+                <form class="space-y-4 max-w-xl mx-auto text-left">
+                    <div class="grid sm:grid-cols-2 gap-4">
+                        <input type="text" placeholder="First Name" class="w-full p-3 rounded-lg text-primary focus:ring-color-accent-2 focus:ring-2 border-none" required>
+                        <input type="text" placeholder="Last Name" class="w-full p-3 rounded-lg text-primary focus:ring-color-accent-2 focus:ring-2 border-none" required>
+                    </div>
+                    
+                    <input type="email" placeholder="Email Address" class="w-full p-3 rounded-lg text-primary focus:ring-color-accent-2 focus:ring-2 border-none" required>
+                    
+                    <input type="text" placeholder="Company or Organisation" class="w-full p-3 rounded-lg text-primary focus:ring-color-accent-2 focus:ring-2 border-none">
+                    
+                    <input type="text" placeholder="Organisation within Belgian Defence (if applicable)" class="w-full p-3 rounded-lg text-primary focus:ring-color-accent-2 focus:ring-2 border-none">
+                    
+                    <input type="text" placeholder="Specify your component, staff department or general directorate" class="w-full p-3 rounded-lg text-primary focus:ring-color-accent-2 focus:ring-2 border-none">
+                    
+                    <input type="text" placeholder="Specify unit (if applicable)" class="w-full p-3 rounded-lg text-primary focus:ring-color-accent-2 focus:ring-2 border-none">
+                    
+                    <input type="text" placeholder="What rank are you? (if applicable)" class="w-full p-3 rounded-lg text-primary focus:ring-color-accent-2 focus:ring-2 border-none">
+                    
+                    <div class="flex items-center space-x-3 pt-2">
+                        <label for="reservist" class="text-white opacity-90 cursor-pointer text-sm">
+                            Are you a reservist within Belgian Defence?
+                        </label>
+                        <!-- Checkbox is styled to use accent color when checked -->
+                        <input type="checkbox" id="reservist" class="h-5 w-5 rounded text-color-accent-1 focus:ring-color-accent-1">
+                    </div>
+
+                    <!-- Privacy Checkbox -->
+                    <div class="flex items-start space-x-3 pt-4">
+                        <input type="checkbox" id="privacy-agree" class="h-5 w-5 rounded text-color-accent-1 focus:ring-color-accent-1 mt-1" required>
+                        <label for="privacy-agree" class="text-sm text-white opacity-80 cursor-pointer">
+                            I agree that the Belgian Defence and the Inno4Def consortium can use this info in compliance with Belgian Defence’s privacy policy (<a href="#" class="underline font-medium hover:text-gray-300">NL</a> – <a href="#" class="underline font-medium hover:text-gray-300">FR</a>)
+                        </label>
+                    </div>
+                    
+                    <!-- Button color confirmed as color-accent-1 (#E55a5a) -->
+                    <button type="submit" class="w-full bg-accent-1 text-white font-bold px-8 py-3 rounded-xl shadow-lg hover:bg-opacity-90 transition duration-300 transform hover:scale-[1.01] mt-6">
+                        Send & Join
+                    </button>
+                </form>
+            </div>
+        </section>
+
+    </main>
+
+    <!-- 10. Footer -->
+    <footer class="mt-16 bg-gray-900 text-white py-10">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8">
+            <div class="grid md:grid-cols-3 gap-8 text-sm border-b border-gray-700 pb-8 mb-8">
+                <!-- Implemented By -->
+                <div class="space-y-2">
+                    <h4 class="font-bold text-lg text-color-accent-2">Implemented By</h4>
+                    <p>Belgian Defence</p>
+                    <div class="flex space-x-4">
+                        <!-- Social Icons Placeholder -->
+                        <a href="#" class="text-gray-400 hover:text-white transition duration-300">
+                            <!-- SVG Placeholder for Social 1 -->
+                            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.477 2 2 6.477 2 12c0 4.232 2.766 7.846 6.55 9.138.48.09.654-.207.654-.46V19.3c-2.695.59-3.264-1.288-3.264-1.288-.44-.925-1.074-1.173-1.074-1.173-.878-.598.067-.585.067-.585.97.067 1.478.997 1.478.997.86 1.47 2.253 1.047 2.802.798.087-.62.338-1.047.615-1.288-2.146-.246-4.403-1.074-4.403-4.764 0-1.05.37-1.908.974-2.583-.098-.246-.42-1.22.093-2.54 0 0 .795-.25 2.606.985 1.76-.49 3.63-.49 5.39 0 1.81-1.235 2.605-.985 2.605-.985.513 1.32.19 2.294.09 2.54.604.675.974 1.533.974 2.583 0 3.698-2.26 4.518-4.41 4.757.348.3.654.887.654 1.78v2.028c0 .253.174.55.65.46C19.234 19.846 22 16.232 22 12c0-5.523-4.477-10-10-10z"/></svg>
+                        </a>
+                        <!-- Add other social links here -->
+                    </div>
+                </div>
+                
+                <!-- Support -->
+                <div class="space-y-2">
+                    <h4 class="font-bold text-lg text-color-accent-2">With the Support of</h4>
+                    <ul class="space-y-1">
+                        <li>Verhaert</li>
+                        <li>Hack Belgium</li>
+                        <li>Soprasteria</li>
+                    </ul>
+                </div>
+
+                <!-- Footer Links (Placeholder) -->
+                <div class="space-y-2">
+                    <h4 class="font-bold text-lg text-color-accent-2">Quick Links</h4>
+                    <ul class="space-y-1">
+                        <li><a href="#" class="hover:text-gray-300">Privacy Policy</a></li>
+                        <li><a href="#" class="hover:text-gray-300">Terms of Use</a></li>
+                        <li><a href="#" class="hover:text-gray-300">Contact Us</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="text-center text-gray-500 pt-4">
+                &copy; 2025 Innovation for Defence (I4D) - Belgian Defence. All rights reserved.
+            </div>
+        </div>
+    </footer>
+
+</body>
+</html>
