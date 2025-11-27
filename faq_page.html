@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inno4Def: Full FAQ & Glossary</title>
+    <!-- Load Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@100..900&display=swap" rel="stylesheet">
+    <style>
+        /* Custom colors from the user request */
+        .color-primary { --tw-bg-opacity: 1; background-color: #184552; } /* Dark Blue */
+        .color-secondary { --tw-bg-opacity: 1; background-color: #F4F1E8; } /* Light Beige */
+        .color-accent-1 { --tw-bg-opacity: 1; background-color: #E55a5a; } /* Red/Salmon */
+        .color-accent-2 { --tw-bg-opacity: 1; background-color: #008991; } /* Teal */
+        .color-accent-3 { --tw-bg-opacity: 1; background-color: #63A082; } /* Green */
+        .color-accent-4 { --tw-bg-opacity: 1; background-color: #8297a1; } /* Grey-Blue */
+        
+        .text-primary { color: #184552; }
+        .text-accent-1 { color: #E55a5a; }
+        .text-accent-2 { color: #008991; }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #F4F1E8; /* Light Beige background */
+        }
+        .section-title {
+            position: relative;
+            display: inline-block; 
+            padding-bottom: 8px;
+            font-size: 2.25rem;
+            font-weight: 700;
+            color: #184552;
+        }
+        .section-title::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 75px;
+            height: 4px;
+            background-color: #E55a5a;
+            border-radius: 9999px;
+        }
+        .faq-card {
+            transition: all 0.2s ease;
+        }
+        .faq-card:hover {
+            box-shadow: 0 4px 10px rgba(24, 69, 82, 0.1);
+        }
+        details > summary {
+            list-style: none;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        details > summary:hover {
+            color: #E55a5a; /* Accent-1 color on hover */
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Navigation (Minimalist) -->
+    <header class="bg-white shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+            <div class="text-xl font-bold text-primary">Inno4Def</div>
+            <a href="index.html#faq" class="text-primary hover:text-accent-1 font-medium px-4 py-2 rounded-lg transition duration-300">
+                &larr; Back to Main Page
+            </a>
+        </div>
+    </header>
+
+    <main class="max-w-4xl mx-auto px-6 lg:px-8 py-16">
+
+        <!-- Full FAQ Section -->
+        <section id="full-faq" class="mb-24">
+            <div class="text-center mb-12">
+                <h1 class="text-4xl font-extrabold text-primary mb-2">
+                    Frequently Asked Questions
+                </h1>
+                <p class="text-lg text-gray-600">All the answers you need about I4D, our process, and our terminology.</p>
+            </div>
+            
+            <h2 class="text-2xl font-bold text-primary mb-6 border-b pb-2 text-accent-2">General Questions (FAQs)</h2>
+
+            <div class="space-y-4">
+                <!-- FAQ 1 -->
+                <details class="faq-card bg-white p-6 rounded-xl shadow-md">
+                    <summary class="text-lg font-bold text-primary">What is Inno4Def?</summary>
+                    <p class="text-gray-600 mt-2 border-t pt-4">Inno4Def is the dedicated Belgian Defence program accelerating bottom-up, short-cycle innovation. Its goal is to quickly test, scale, and integrate ideas and solutions proposed by Belgian Defence personnel and the industry into Defence operations.</p>
+                </details>
+
+                <!-- FAQ 2 -->
+                <details class="faq-card bg-white p-6 rounded-xl shadow-md">
+                    <summary class="text-lg font-bold text-primary">Why is Inno4Def important for Belgian Defence?</summary>
+                    <p class="text-gray-600 mt-2 border-t pt-4">Inno4Def ensures agility. In a rapidly changing operational environment, it allows us to continuously adopt new technologies and working methods, crucial for strengthening our capabilities and securing mission success.</p>
+                </details>
+
+                <!-- FAQ 3 -->
+                <details class="faq-card bg-white p-6 rounded-xl shadow-md">
+                    <summary class="text-lg font-bold text-primary">Who is it for?</summary>
+                    <p class="text-gray-600 mt-2 border-t pt-4">Inno4Def is intended for everyone within Belgian Defence with an idea, identified need or just the wish to stay up to date. We are also open to external partners (industry, academia) who want to contribute their expertise to solving specific Defence challenges.</p>
+                </details>
+
+                <!-- FAQ 4 -->
+                <details class="faq-card bg-white p-6 rounded-xl shadow-md">
+                    <summary class="text-lg font-bold text-primary">How does Inno4Def differ from regular Defence projects?</summary>
+                    <p class="text-gray-600 mt-2 border-t pt-4">Inno4Def focuses on short-cycle and bottom-up innovation. This means the process is faster and ideas originate from those facing the operational challenges daily, unlike long-term, top-down procurement programs.</p>
+                </details>
+
+                <!-- FAQ 5 -->
+                <details class="faq-card bg-white p-6 rounded-xl shadow-md">
+                    <summary class="text-lg font-bold text-primary">How does the Innovation Board work?</summary>
+                    <p class="text-gray-600 mt-2 border-t pt-4">The Innovation Board is the decision-making body composed of Innovation Officers from all Defence components, general directorates and staff departments. They review and approve ideas, prioritise critical needs, and coach innovators during project execution.</p>
+                </details>
+
+                <!-- FAQ 6 -->
+                <details class="faq-card bg-white p-6 rounded-xl shadow-md">
+                    <summary class="text-lg font-bold text-primary">What is the typical timeframe for an Inno4Def project?</summary>
+                    <p class="text-gray-600 mt-2 border-t pt-4">Inno4Def focuses on short-cycle innovation. The time from idea submission to implementation is generally much faster than traditional procurement, aiming for rapid testing and scaling where possible, often measured in weeks and months rather than years.</p>
+                </details>
+
+                <!-- FAQ 7 -->
+                <details class="faq-card bg-white p-6 rounded-xl shadow-md">
+                    <summary class="text-lg font-bold text-primary">What support do I get if my idea is approved?</summary>
+                    <p class="text-gray-600 mt-2 border-t pt-4">Approved ideas move into the execution phase where you receive coaching from the Innovation Board Officers. Projects are supported through dedicated resources like the Physical/Digital Sandbox for testing and development. It is possible that there is additional support from the IaaS-contract (Innovation as a Service) partners: Verhaert, HackBelgium and Sopra Steria.</p>
+                </details>
+
+                <!-- FAQ 8 -->
+                <details class="faq-card bg-white p-6 rounded-xl shadow-md">
+                    <summary class="text-lg font-bold text-primary">How can I participate in Inno4Def?</summary>
+                    <p class="text-gray-600 mt-2 border-t pt-4">You can participate in three ways: 1. As a Problem Explorer (submitting a Need). 2. As an Idea Submitter (submitting a solution Idea). 3. As a Problem Solver (participating in Innovation Training or Hackathons to solve existing challenges).</p>
+                </details>
+
+                <!-- FAQ 9 -->
+                <details class="faq-card bg-white p-6 rounded-xl shadow-md">
+                    <summary class="text-lg font-bold text-primary">What happens after I submit an idea (Idea Submission)?</summary>
+                    <p class="text-gray-600 mt-2 border-t pt-4">Your idea goes through the Idea Qualification Process. If positively evaluated, it is presented to the Innovation Board for approval, after which the project is executed and tested (e.g., in a Sandbox).</p>
+                </details>
+                
+                <!-- FAQ 10 -->
+                <details class="faq-card bg-white p-6 rounded-xl shadow-md">
+                    <summary class="text-lg font-bold text-primary">What happens after I submit a need (Need Identification)?</summary>
+                    <p class="text-gray-600 mt-2 border-t pt-4">The submitted need is converted into a concrete Challenge. This Challenge is then used as a topic in Innovation Training or Hackathons, or published on the Open Challenge Platform to gather solutions.</p>
+                </details>
+
+                <!-- FAQ 11 -->
+                <details class="faq-card bg-white p-6 rounded-xl shadow-md">
+                    <summary class="text-lg font-bold text-primary">Who decides on the execution of the ideas?</summary>
+                    <p class="text-gray-600 mt-2 border-t pt-4">The Innovation Board, consisting of Innovation Officers from all Defence components and staff units, reviews and decides on the execution of the submitted ideas.</p>
+                </details>
+                
+                <!-- FAQ 12 -->
+                <details class="faq-card bg-white p-6 rounded-xl shadow-md">
+                    <summary class="text-lg font-bold text-primary">Are external partners allowed to submit ideas?</summary>
+                    <p class="text-gray-600 mt-2 border-t pt-4">Yes. External parties are welcome to submit Ideas (Pathway 2) or participate as Problem Solvers (Pathway 3) to help develop solutions for validated Defence Challenges.</p>
+                </details>
+
+                <!-- FAQ 13 -->
+                <details class="faq-card bg-white p-6 rounded-xl shadow-md">
+                    <summary class="text-lg font-bold text-primary">How does Innovation4Defence fit in the overall innovation and R&D ecosystem in Belgium?</summary>
+                    <p class="text-gray-600 mt-2 border-t pt-4">Inno4Def acts as the internal accelerator for Defence's specific operational needs. While traditional R&D often focuses on long-term technological development, Inno4Def focuses on rapid, short-cycle solutions driven by the user. By opening our Challenges to external partners, we actively collaborate with the Belgian ecosystem (academia, research centers, and industry) to pull proven civilian and military technologies into practical Defence application, thereby strengthening the technological base of the Defence-Nation link.</p>
+                </details>
+                
+                <!-- FAQ 14 -->
+                <details class="faq-card bg-white p-6 rounded-xl shadow-md">
+                    <summary class="text-lg font-bold text-primary">Who can propose an idea?</summary>
+                    <p class="text-gray-600 mt-2 border-t pt-4">Everyone within Belgian Defence (military personnel and civilians) is encouraged to submit ideas through the Idea Submission Form. Additionally, external partners (industry, research, academia) can submit ideas, particularly when addressing one of the officially published Inno4Def Challenges.</p>
+                </details>
+
+                <!-- FAQ 15 -->
+                <details class="faq-card bg-white p-6 rounded-xl shadow-md">
+                    <summary class="text-lg font-bold text-primary">What is a good idea? what are the sucess factors?</summary>
+                    <p class="text-gray-600 mt-2 border-t pt-4">A successful Inno4Def idea addresses a genuine, validated operational need and has a clear potential for impact, even if it starts small. Success factors include: 1. Clarity and Focus (Is the problem clearly defined?), 2. Feasibility (Can it be tested and developed relatively quickly?), and 3. Scalability (Does it have the potential for broader Defence application?). The most important factor is often the Innovator's commitment to coaching and testing.</p>
+                </details>
+
+            </div>
+            
+            <h2 class="text-2xl font-bold text-primary mb-6 mt-16 border-b pb-2 text-accent-1">Glossary of Key Terms</h2>
+
+            <div class="space-y-4">
+                <!-- Term 1 -->
+                <details class="faq-card bg-white p-6 rounded-xl shadow-md">
+                    <summary class="text-lg font-bold text-primary">What is bottom-up Innovation?</summary>
+                    <p class="text-gray-600 mt-2 border-t pt-4">Innovation that starts with the personnel (in the field, at the workplace) rather than being mandated by senior management (top-down). Inno4Def is focused on this.</p>
+                </details>
+
+                <!-- Term 2 -->
+                <details class="faq-card bg-white p-6 rounded-xl shadow-md">
+                    <summary class="text-lg font-bold text-primary">What is short-cycle innovation?</summary>
+                    <p class="text-gray-600 mt-2 border-t pt-4">An innovation process characterized by high speed, rapid feedback loops, and short periods between idea generation, testing, and implementation.</p>
+                </details>
+
+                <!-- Term 3 -->
+                <details class="faq-card bg-white p-6 rounded-xl shadow-md">
+                    <summary class="text-lg font-bold text-primary">What is the Idea Qualification Process?</summary>
+                    <p class="text-gray-600 mt-2 border-t pt-4">The initial evaluation phase for submitted ideas, typically involving a quick and rough assessment of relevance and feasibility (RAW/Snif Assessment).</p>
+                </details>
+
+                <!-- Term 4 -->
+                <details class="faq-card bg-white p-6 rounded-xl shadow-md">
+                    <summary class="text-lg font-bold text-primary">What is a sandbox (Physical/Digital)?</summary>
+                    <p class="text-gray-600 mt-2 border-t pt-4">A controlled testing environment (physical or virtual) where new solutions, prototypes, or technologies can be safely trialled and validated under realistic conditions.</p>
+                </details>
+
+                <!-- Term 5 -->
+                <details class="faq-card bg-white p-6 rounded-xl shadow-md">
+                    <summary class="text-lg font-bold text-primary">What is a horizon Scan?</summary>
+                    <p class="text-gray-600 mt-2 border-t pt-4">A structured research process aimed at identifying new trends, technologies, or existing solutions in the market or with other organisations that may be relevant to a submitted idea or need.</p>
+                </details>
+
+                <!-- Term 6 -->
+                <details class="faq-card bg-white p-6 rounded-xl shadow-md">
+                    <summary class="text-lg font-bold text-primary">What is a hackathon?</summary>
+                    <p class="text-gray-600 mt-2 border-t pt-4">An intensive, multidisciplinary event (usually 2-3 days) where groups collaborate to design and prototype innovative solutions for a predetermined set of challenges.</p>
+                </details>
+                
+                <!-- Term 7 -->
+                <details class="faq-card bg-white p-6 rounded-xl shadow-md">
+                    <summary class="text-lg font-bold text-primary">What is an Innovation Officer?</summary>
+                    <p class="text-gray-600 mt-2 border-t pt-4">Representatives from the various Defence components (Land, Air, Sea, Cyber, Medical, etc.) staff departments and general directorates who serve on the Innovation Board.</p>
+                </details>
+            </div>
+
+        </section>
+
+    </main>
+
+    <!-- 10. Footer -->
+    <footer class="mt-16 bg-gray-900 text-white py-10">
+        <div class="max-w-7xl mx-auto px-6 lg:px-8 text-center">
+            <p class="text-gray-500 pt-4">
+                &copy; 2025 Innovation for Defence (I4D) - Belgian Defence. All rights reserved.
+            </p>
+        </div>
+    </footer>
+
+</body>
+</html>
