@@ -1,0 +1,746 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Indiener Dossier Aanvraag Flow</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f7f9fb; }
+        .flow-step { transition: color 0.3s, border-color 0.3s; }
+        .flow-step.active { border-color: #10B981; color: #10B981; }
+        .step-dot { transition: background-color 0.3s; }
+        .nav-button { transition: transform 0.1s, box-shadow 0.1s; }
+        .nav-button:active { transform: translateY(1px); box-shadow: none; }
+        
+        .gis-map-placeholder { 
+            background-image: url('https://placehold.co/800x400/D1D5DB/4B5563?text=GIS+Kaartweergave');
+            background-size: cover;
+            background-position: center;
+            height: 400px;
+            position: relative;
+        }
+        
+        /* Kaartlagen Sidebar (box in box) */
+        .kaartlagen-box {
+            position: absolute;
+            top: 16px; 
+            right: 16px;
+            width: 220px;
+            background-color: #ffffff;
+            padding: 12px;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            max-height: 90%;
+            overflow-y: auto;
+            z-index: 10;
+        }
+
+        /* Status badges voor het Dossier Overzicht */
+        .match-label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 0.2rem 0.6rem;
+            border-radius: 0.375rem;
+            background-color: #10B981;
+            color: white;
+            display: inline-block;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <!-- Header / Rol -->
+    <header class="mb-6 flex justify-between items-center pb-4 border-b border-gray-200">
+        <h1 class="text-2xl font-bold text-gray-800">Dossier Aanvraag</h1>
+        <div class="flex items-center space-x-3">
+            <span class="text-sm text-gray-500">Ingelogd als:</span>
+            <span class="px-3 py-1 bg-green-500 text-white text-sm font-semibold rounded-full shadow-md">Aanvrager</span>
+        </div>
+    </header>
+
+    <!-- Main Container -->
+    <main class="max-w-7xl mx-auto">
+        
+        <!-- MODULE: Projecten Overzicht -->
+        <div id="module-overview" class="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+            <h2 class="text-xl font-bold text-gray-800 mb-6 flex justify-between items-center">
+                <span>36 Dossiers</span>
+                <button onclick="setModule('start')" class="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-semibold hover:bg-blue-700 transition-colors nav-button">
+                    + Nieuw dossier
+                </button>
+            </h2>
+            
+            <!-- Filters -->
+            <div class="flex flex-wrap gap-3 mb-6">
+                <select class="px-4 py-2 border border-gray-300 rounded-lg text-sm">
+                    <option>Status ▼</option>
+                </select>
+                <select class="px-4 py-2 border border-gray-300 rounded-lg text-sm">
+                    <option>Type ▼</option>
+                </select>
+            </div>
+
+            <!-- Dossier Lijst -->
+            <div class="overflow-x-auto">
+                 <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Naam</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Adres</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Opp</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Type</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Update</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Matches</th>
+                            <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Actie</th>
+                        </tr>
+                    </thead>
+                    <tbody class="divide-y divide-gray-200">
+                        <!-- 1. Konijnenberg -->
+                        <tr onclick="setModule('flow')" class="cursor-pointer hover:bg-gray-50">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Konijnenberg</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Straatnaam 110, 20...</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">6,09 ha</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Aanvraag</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">12/12/2025</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">In behandeling</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-right">
+                                <span onclick="event.stopPropagation(); setModule('matches')" class="match-label bg-black cursor-pointer">4 matches</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-right text-lg text-gray-400 font-bold">&gt;</td>
+                        </tr>
+                        <!-- 2. De Cauwel -->
+                        <tr onclick="setModule('flow')" class="cursor-pointer hover:bg-gray-50">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">De Cauwel</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Straatnaam 110, 20...</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">24,4 ha</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Aanvraag</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">12/12/2025</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Suggestie</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-right">
+                                <span onclick="event.stopPropagation();" class="match-label bg-gray-400 cursor-default">0 matches</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-right text-lg text-gray-400 font-bold">&gt;</td>
+                        </tr>
+                        <!-- 3. Prinsdom -->
+                        <tr onclick="setModule('flow')" class="cursor-pointer hover:bg-gray-50">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Prinsdom</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Straatnaam 110, 20...</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">4,1 ha</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Column</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">12/12/2025</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Suggestie</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-right">
+                                <span onclick="event.stopPropagation();" class="match-label bg-gray-400 cursor-default">0 matches</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-right text-lg text-gray-400 font-bold">&gt;</td>
+                        </tr>
+                        <!-- 4. Burenbult -->
+                        <tr onclick="setModule('flow')" class="cursor-pointer hover:bg-gray-50">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Burenbult</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Straatnaam 110, 20...</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">11,03 ha</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Column</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">12/12/2025</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Status</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-right">
+                                <span onclick="event.stopPropagation(); setModule('matches')" class="match-label bg-black cursor-pointer">5 matches</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-right text-lg text-gray-400 font-bold">&gt;</td>
+                        </tr>
+                        <!-- 5. Travers -->
+                        <tr onclick="setModule('flow')" class="cursor-pointer hover:bg-gray-50">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Travers</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Straatnaam 110, 20...</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">24,4 ha</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Column</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">12/12/2025</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Status</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-right text-sm text-gray-400">—</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-right text-lg text-gray-400 font-bold">&gt;</td>
+                        </tr>
+                        <!-- 6. Polspotten -->
+                        <tr onclick="setModule('flow')" class="cursor-pointer hover:bg-gray-50">
+                            <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">Polspotten</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Straatnaam 110, 20...</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">4,1 ha</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Column</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">12/12/2025</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500">Suggestie</td>
+                            <td class="px-6 py-4 whitespace-nowrap text-right">
+                                <span onclick="event.stopPropagation();" class="match-label bg-gray-400 cursor-default">0 matches</span>
+                            </td>
+                            <td class="px-6 py-4 whitespace-nowrap text-right text-lg text-gray-400 font-bold">&gt;</td>
+                        </tr>
+                    </tbody>
+                 </table>
+            </div>
+        </div>
+        
+        <!-- Module voor Start Dossier -->
+        <div id="module-start" class="bg-white rounded-xl shadow-lg p-8 border border-gray-200 hidden">
+            <h2 class="text-xl font-bold text-gray-800 mb-6">Nieuw dossier</h2>
+            <div class="max-w-md space-y-6">
+                <div>
+                    <label for="project-name" class="block text-sm font-medium text-gray-700 mb-1">Naam project</label>
+                    <input type="text" id="project-name" value="Konijnenberg" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                 <div>
+                    <label for="gemeente" class="block text-sm font-medium text-gray-700 mb-1">Gemeente</label>
+                    <input type="text" id="gemeente" value="Hasselt" class="w-full p-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500">
+                </div>
+                <button onclick="setModule('flow', 1)" class="px-6 py-3 bg-blue-600 text-white rounded-lg font-semibold hover:bg-blue-700 transition-colors">
+                    Start dossier
+                </button>
+            </div>
+        </div>
+        
+        <!-- Module voor de Stapsgewijze Flow (Contouren, Bestemming, etc.) -->
+        <div id="module-flow" class="hidden">
+            <div id="detail-view" class="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+                <h2 id="dossier-title" class="text-xl font-bold text-gray-800 mb-6">Dossier: Konijnenberg</h2>
+                
+                <!-- Progressiebar -->
+                <div class="flex justify-between mb-8 border-b border-gray-200">
+                    <div class="flex-1 pb-4 cursor-pointer flow-step active" onclick="setStep(1)">
+                        <div class="flex flex-col items-center justify-center">
+                            <span class="w-3 h-3 rounded-full bg-blue-500 step-dot mb-1"></span>
+                            <span class="text-xs sm:text-sm font-semibold whitespace-nowrap">1. Contouren</span>
+                        </div>
+                    </div>
+                    <div class="flex-1 pb-4 cursor-pointer flow-step" onclick="setStep(2)">
+                        <div class="flex flex-col items-center justify-center">
+                            <span class="w-3 h-3 rounded-full bg-gray-400 step-dot mb-1"></span>
+                            <span class="text-xs sm:text-sm font-semibold whitespace-nowrap">2. Bestemming</span>
+                        </div>
+                    </div>
+                    <div class="flex-1 pb-4 cursor-pointer flow-step" onclick="setStep(3)">
+                        <div class="flex flex-col items-center justify-center">
+                            <span class="w-3 h-3 rounded-full bg-gray-400 step-dot mb-1"></span>
+                            <span class="text-xs sm:text-sm font-semibold whitespace-nowrap">3. Context</span>
+                        </div>
+                    </div>
+                    <div class="flex-1 pb-4 cursor-pointer flow-step" onclick="setStep(4)">
+                        <div class="flex flex-col items-center justify-center">
+                            <span class="w-3 h-3 rounded-full bg-gray-400 step-dot mb-1"></span>
+                            <span class="text-xs sm:text-sm font-semibold whitespace-nowrap">4. Oppervlakte</span>
+                        </div>
+                    </div>
+                    <div class="flex-1 pb-4 cursor-pointer flow-step" onclick="setStep(5)">
+                        <div class="flex flex-col items-center justify-center">
+                            <span class="w-3 h-3 rounded-full bg-gray-400 step-dot mb-1"></span>
+                            <span class="text-xs sm:text-sm font-semibold whitespace-nowrap">5. Controle</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Hoofdinhoud: Map & Formulier -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                    <!-- Kaart -->
+                    <div class="lg:col-span-2 relative">
+                        <div class="gis-map-placeholder rounded-lg shadow-md border border-gray-300">
+                            
+                            <!-- GIS Zoekbalk -->
+                            <div class="absolute top-4 left-4 bg-white p-2 rounded-lg shadow-xl text-xs font-medium">
+                                <input type="text" placeholder="Search..." class="p-1 border border-gray-300 rounded-lg w-40">
+                            </div>
+                            
+                            <!-- GIS Tools -->
+                            <div class="absolute top-4 right-4 flex space-x-2 mr-52">
+                                <button class="bg-white p-2 rounded-lg shadow-xl text-gray-700" title="Laagbeheer">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M11 20H4a2 2 0 0 1-2-2V5c0-1.1.9-2 2-2h3.93a2 2 0 0 1 1.66.9l.82 1.25a2 2 0 0 0 1.66.9H20a2 2 0 0 1 2 2v2"/></svg>
+                                </button>
+                                <button class="bg-white p-2 rounded-lg shadow-xl text-gray-700" title="Annotatie">
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5Z"/></svg>
+                                </button>
+                            </div>
+                            
+                            <!-- Kaartlagen Box -->
+                            <div id="kaartlagen-box" class="kaartlagen-box">
+                                <h4 class="font-bold mb-3 text-gray-800 flex justify-between items-center">
+                                    <span>&gt; Kaart lagen</span>
+                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-500"><path d="M21 12H3"/><path d="M16 8L21 12L16 16"/></svg>
+                                </h4>
+                                <div class="space-y-2 pb-4 border-b border-gray-200">
+                                    <p class="font-semibold text-sm text-gray-700">Ruimtelijke ordening</p>
+                                    <label class="flex items-center text-sm text-gray-600"><input type="checkbox" checked class="mr-2 accent-blue-600"> Gewestplan</label>
+                                    <label class="flex items-center text-sm text-gray-600"><input type="checkbox" class="mr-2 accent-blue-600"> HAG</label>
+                                    <label class="flex items-center text-sm text-gray-600"><input type="checkbox" class="mr-2 accent-blue-600"> WORG</label>
+                                    <label class="flex items-center text-sm text-gray-600"><input type="checkbox" class="mr-2 accent-blue-600"> RUP</label>
+                                </div>
+                                <div class="space-y-2 mt-4 pt-4 border-t border-gray-200">
+                                    <p class="font-semibold text-sm text-gray-700">Laag type</p>
+                                    <label class="flex items-center text-sm text-gray-600"><input type="checkbox" class="mr-2 accent-blue-600"> Laag 1</label>
+                                    <label class="flex items-center text-sm text-gray-600"><input type="checkbox" class="mr-2 accent-blue-600"> Laag 2</label>
+                                    <label class="flex items-center text-sm text-gray-600"><input type="checkbox" class="mr-2 accent-blue-600"> Laag 3</label>
+                                </div>
+                            </div>
+                            
+                            <div class="absolute inset-0 bg-black bg-opacity-10 flex items-center justify-center text-white text-lg font-bold">
+                                 <p>Visualisatie van dossiercontour</p>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Formulier/Acties -->
+                    <div class="lg:col-span-1">
+                        <div id="step-content-container" class="bg-white p-0 rounded-lg">
+                            <!-- Dynamische inhoud -->
+                        </div>
+                        
+                        <div class="mt-6 pt-4 border-t border-gray-200 flex justify-between">
+                            <button id="btn-back" onclick="navigate(-1)" class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg text-sm font-semibold hover:bg-gray-300 transition-colors hidden">
+                                &lt; Vorige
+                            </button>
+                            <button id="btn-next" onclick="navigate(1)" class="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-semibold hover:bg-blue-700 transition-colors">
+                                Volgende &gt;
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Module Match Overzicht -->
+        <div id="module-matches" class="hidden">
+            <button onclick="setModule('overview')" class="text-blue-600 hover:text-blue-800 text-sm font-medium mb-4 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1"><path d="m15 18-6-6 6-6"/></svg>
+                Terug naar Mijn Dossiers
+            </button>
+            <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+                <h2 class="text-xl font-bold text-gray-800 mb-6 flex justify-between items-center">
+                    <span>4 Matches voor dossier 'Konijnenberg'</span>
+                    <button class="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg text-sm font-semibold hover:bg-gray-300">Export</button>
+                </h2>
+
+                <!-- Match Lijst -->
+                <div class="space-y-4">
+                    <!-- Match 1 -->
+                    <div class="border border-gray-300 rounded-lg p-4 cursor-pointer hover:bg-gray-50" onclick="setModule('match-detail', 1)">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="text-lg font-bold text-gray-800">Match name 1</h4>
+                            <div class="text-right">
+                                <span class="text-xl font-bold text-green-600">88%</span>
+                                <span class="text-xs text-gray-600 block">Hoog</span>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <p class="font-semibold text-sm mb-1">Beschrijving</p>
+                                <p class="text-sm text-gray-600">Geschikt perceel van 8,5 ha in Mechelen. Voldoet aan alle harde randvoorwaarden.</p>
+                            </div>
+                            <div>
+                                <p class="font-semibold text-sm mb-1">Status</p>
+                                <span class="px-3 py-1 bg-green-200 text-green-800 text-xs rounded-full inline-block mb-1">Gereserveerd</span>
+                                <p class="text-xs text-gray-500 mb-2">Reservatie geldig tot 24/11/2025</p>
+                                <div class="flex gap-2">
+                                    <button class="px-3 py-1 bg-gray-200 text-gray-700 rounded-lg text-xs hover:bg-gray-300">Contact</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Match 2 -->
+                    <div class="border border-gray-300 rounded-lg p-4 cursor-pointer hover:bg-gray-50" onclick="setModule('match-detail', 2)">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="text-lg font-bold text-gray-800">Match name 2</h4>
+                            <div class="text-right">
+                                <span class="text-xl font-bold text-green-600">87%</span>
+                                <span class="text-xs text-gray-600 block">Hoog</span>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <p class="font-semibold text-sm mb-1">Beschrijving</p>
+                                <p class="text-sm text-gray-600">Grond van 12,1 ha in Puurs. Publieke eigendom, wat de onderhandeling kan versnellen.</p>
+                            </div>
+                            <div>
+                                <p class="font-semibold text-sm mb-1">Status</p>
+                                <span class="px-3 py-1 bg-gray-200 text-gray-700 text-xs rounded-full inline-block mb-2">Beschikbaar</span>
+                                <div class="flex gap-2">
+                                    <button class="px-3 py-1 bg-gray-200 text-gray-700 rounded-lg text-xs hover:bg-gray-300">Reserveer</button>
+                                    <button class="px-3 py-1 bg-gray-200 text-gray-700 rounded-lg text-xs hover:bg-gray-300">Contact</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Match 3 -->
+                    <div class="border border-gray-300 rounded-lg p-4 cursor-pointer hover:bg-gray-50" onclick="setModule('match-detail', 3)">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="text-lg font-bold text-gray-800">Match name 3</h4>
+                            <div class="text-right">
+                                <span class="text-xl font-bold text-yellow-600">67%</span>
+                                <span class="text-xs text-gray-600 block">Gemiddeld</span>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <p class="font-semibold text-sm mb-1">Beschrijving</p>
+                                <p class="text-sm text-gray-600">Perceel in Bornem, vereist meer onderzoek vanwege matige verontreiniging.</p>
+                            </div>
+                            <div>
+                                <p class="font-semibold text-sm mb-1">Status</p>
+                                <span class="px-3 py-1 bg-gray-200 text-gray-700 text-xs rounded-full inline-block mb-2">Beschikbaar</span>
+                                <div class="flex gap-2">
+                                    <button class="px-3 py-1 bg-gray-200 text-gray-700 rounded-lg text-xs hover:bg-gray-300">Reserveer</button>
+                                    <button class="px-3 py-1 bg-gray-200 text-gray-700 rounded-lg text-xs hover:bg-gray-300">Contact</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Match 4 -->
+                    <div class="border border-gray-300 rounded-lg p-4 cursor-pointer hover:bg-gray-50" onclick="setModule('match-detail', 4)">
+                        <div class="flex justify-between items-start mb-2">
+                            <h4 class="text-lg font-bold text-gray-800">Match name 4</h4>
+                            <div class="text-right">
+                                <span class="text-xl font-bold text-yellow-600">63%</span>
+                                <span class="text-xs text-gray-600 block">Gemiddeld</span>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-2 gap-4">
+                            <div>
+                                <p class="font-semibold text-sm mb-1">Beschrijving</p>
+                                <p class="text-sm text-gray-600">Perceel met bijkomende voorwaarden. Geschikt mits extra afspraken.</p>
+                            </div>
+                            <div>
+                                <p class="font-semibold text-sm mb-1">Status</p>
+                                <span class="px-3 py-1 bg-gray-200 text-gray-700 text-xs rounded-full inline-block mb-2">Beschikbaar</span>
+                                <div class="flex gap-2">
+                                    <button class="px-3 py-1 bg-gray-200 text-gray-700 rounded-lg text-xs hover:bg-gray-300">Reserveer</button>
+                                    <button class="px-3 py-1 bg-gray-200 text-gray-700 rounded-lg text-xs hover:bg-gray-300">Contact</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Module Match Detail -->
+        <div id="module-match-detail" class="hidden">
+            <button onclick="setModule('matches')" class="text-blue-600 hover:text-blue-800 text-sm font-medium mb-4 flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1"><path d="m15 18-6-6 6-6"/></svg>
+                Terug naar Match Overzicht
+            </button>
+            <div class="bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+                <h2 class="text-xl font-bold text-gray-800 mb-6">Detail Match name 1</h2>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <!-- Linkerzijde: Algemeen & Beschrijving -->
+                    <div class="space-y-4">
+                        <h4 class="font-semibold text-lg border-b pb-1">Algemene informatie</h4>
+                        <p class="text-sm text-gray-600"><span class="font-semibold text-gray-800 w-24 inline-block">Gemeente:</span> Mechelen</p>
+                        <p class="text-sm text-gray-600"><span class="font-semibold text-gray-800 w-24 inline-block">Oppervlakte:</span> 8,5 ha</p>
+                        <p class="text-sm text-gray-600"><span class="font-semibold text-gray-800 w-24 inline-block">Status:</span> Gereserveerd</p>
+                        
+                        <h4 class="font-semibold text-lg border-b pb-1 pt-4">Beschrijving</h4>
+                        <p class="text-sm text-gray-600">Geschikt perceel van 8,5 ha in Mechelen. Voldoet aan alle harde randvoorwaarden en is in lijn met de lokale GRS-visie.</p>
+                    </div>
+                    
+                    <!-- Rechterzijde: Motivatie Rangschikking & Acties -->
+                    <div class="space-y-4">
+                        <h4 class="font-semibold text-lg border-b pb-1">Motivatie rangschikking</h4>
+                        <div class="bg-gray-50 p-3 rounded-lg border border-gray-200">
+                            <p class="text-sm text-gray-600"><span class="font-bold text-green-700">88% (Hoog)</span></p>
+                            <ul class="text-xs text-gray-700 list-disc list-inside mt-2 space-y-1">
+                                <li><strong>Hoge score</strong> op bestemmingstype (hard → zacht compensatie).</li>
+                                <li><strong>Omvang</strong> is voldoende groot (indicator 8).</li>
+                                <li><strong>Eenvoudige eigendomsstructuur</strong> (publiek / indicator 10).</li>
+                                <li><strong>Lage overstromingsgevoeligheid</strong> (indicator 5).</li>
+                            </ul>
+                        </div>
+                        
+                        <h4 class="font-semibold text-lg border-b pb-1 pt-4">Acties & contact</h4>
+                        <p class="text-sm text-gray-600"><span class="font-semibold">Contactpersoon:</span> Jan Pietersen</p>
+                        <p class="text-xs text-gray-500">Reservatie geldig tot 24/11/2025</p>
+                        <button class="px-4 py-2 bg-green-600 text-white rounded-lg text-sm font-semibold hover:bg-green-700 transition-colors">
+                            Contact opnemen
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Feedback na indienen – tussenscherm -->
+        <div id="success-view" class="hidden mt-8">
+            <div class="bg-white rounded-xl shadow-lg p-8 border border-gray-200 max-w-3xl mx-auto text-center">
+                <button onclick="setModule('overview')" class="text-blue-600 hover:text-blue-800 text-sm font-medium mb-6 flex items-center justify-center mx-auto">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1"><path d="m15 18-6-6 6-6"/></svg>
+                    Ga terug naar overzicht
+                </button>
+                <h2 class="text-2xl font-bold text-gray-800 mb-2">Konijnenberg</h2>
+                <h3 class="text-3xl font-bold text-green-600 mb-4">Je dossier werd succesvol ingediend!</h3>
+            </div>
+        </div>
+
+    </main>
+
+    <script>
+        let currentModule = 'overview';
+        let currentStep = 1;
+        const totalSteps = 5;
+        
+        // Formuliercontent per stap
+        const stepData = {
+            1: { title: "1. Contouren", cta: "Bevestig contouren", formHtml: `
+                <h4 class="font-bold text-gray-700 mb-3">Contouren tekenen/uploaden</h4>
+                <p class="text-sm text-gray-600 mb-4">
+                    Gebruik de kaarttools om de exacte contouren van uw perceel te definiëren, of importeer een KML/Shapefile.
+                </p>
+                <div class="space-y-3">
+                    <label class="block text-sm font-medium text-gray-700">Contour(en) status</label>
+                    <p class="text-sm text-green-600 font-medium">Contouren getekend (1 deelcontour)</p>
+                    <button class="px-3 py-1 bg-gray-200 text-gray-700 rounded-lg text-sm hover:bg-gray-300">Teken op kaart / bewerken</button>
+                    <button class="px-3 py-1 bg-gray-200 text-gray-700 rounded-lg text-sm hover:bg-gray-300">Importeer bestand</button>
+                </div>
+                <div class="mt-6 pt-4 border-top border-gray-200">
+                    <p class="font-semibold text-sm text-gray-700">Opties</p>
+                    <button class="mt-2 px-3 py-1 bg-white border border-gray-300 text-gray-700 rounded-lg text-sm hover:bg-gray-100">Opslaan</button>
+                </div>
+            `},
+            2: { title: "2. Bestemming", cta: "Bevestig bestemming", formHtml: `
+                <h4 class="font-bold text-gray-700 mb-4">Huidige en toekomstige bestemming</h4>
+                
+                <h5 class="text-sm font-semibold text-gray-700 mb-2 border-b pb-1">Huidige bestemming (totaal: 6,09 ha)</h5>
+                <table class="min-w-full divide-y divide-gray-200 text-sm mb-4">
+                    <thead>
+                        <tr class="text-left text-xs text-gray-500 bg-gray-50">
+                            <th class="p-2">Deelcontour</th>
+                            <th class="p-2">Bestemming</th>
+                            <th class="p-2 text-right">Oppervlakte (ha)</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="h-8">
+                            <td class="p-2">1 (60%)</td>
+                            <td class="p-2">Wonen</td>
+                            <td class="p-2 text-right">3.65</td>
+                        </tr>
+                        <tr class="h-8">
+                            <td class="p-2">2 (40%)</td>
+                            <td class="p-2">Agrarisch</td>
+                            <td class="p-2 text-right">2.44</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <p class="text-xs text-gray-500 mb-4">Totale oppervlakte: 6,09 ha</p>
+
+                <h5 class="text-sm font-semibold text-gray-700 mb-2 border-b pt-2 pb-1">Toekomstige bestemming</h5>
+                <div class="space-y-3">
+                    <div class="flex space-x-2 items-center">
+                        <select class="w-1/3 p-2 border border-gray-300 rounded-lg text-sm bg-white">
+                            <option>Selecteer (deel)contour</option>
+                            <option>Deelcontour 1</option>
+                            <option>Deelcontour 2</option>
+                        </select>
+                        <select class="w-1/3 p-2 border border-gray-300 rounded-lg text-sm bg-white">
+                            <option>Selecteer bestemming</option>
+                            <option>Industrie</option>
+                            <option>Wonen</option>
+                            <option>Groen</option>
+                        </select>
+                        <input type="text" placeholder="%" class="w-1/4 p-2 border border-gray-300 rounded-lg text-sm text-right" value="100%">
+                    </div>
+                    <button class="px-3 py-1 bg-gray-200 text-gray-700 rounded-lg text-xs hover:bg-gray-300">+ Voeg toe</button>
+                </div>
+
+                <p class="text-xs text-gray-500 pt-3 border-t mt-4">
+                    Tip: nieuwe bestemming wordt Industrie (vraag).
+                </p>
+            `},
+            3: { title: "3. Context", cta: "Bevestig context", formHtml: `
+                <h4 class="font-bold text-gray-700 mb-4">Context</h4>
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Risico's & obstakels</label>
+                        <div class="flex flex-wrap gap-2 mb-3">
+                            <span class="px-3 py-1 bg-red-200 text-red-800 text-xs rounded-full flex items-center">
+                                Versnipperde eigendom <span class="ml-1 font-bold cursor-pointer">×</span>
+                            </span>
+                            <span class="px-3 py-1 bg-red-200 text-red-800 text-xs rounded-full flex items-center">
+                                Vervuiling <span class="ml-1 font-bold cursor-pointer">×</span>
+                            </span>
+                        </div>
+                        <select class="w-full p-2 border border-gray-300 rounded-lg text-sm">
+                            <option>Selecteer risicos en obstakels</option>
+                            <option>Archeologische verwachting</option>
+                            <option>Overstromingsrisico</option>
+                        </select>
+                    </div>
+                    
+                    <div class="pt-2">
+                        <label class="block text-sm font-medium text-gray-700 mb-1">Tijdsdruk</label>
+                        <p class="text-xs text-gray-600 mb-2">Heeft dit project een urgente deadline (relevant voor matching)?</p>
+                        <div class="flex space-x-4">
+                            <label class="flex items-center"><input type="radio" name="tijdsdruk" class="mr-2 accent-blue-600"> Ja</label>
+                            <label class="flex items-center"><input type="radio" name="tijdsdruk" checked class="mr-2 accent-blue-600"> Nee</label>
+                        </div>
+                    </div>
+                    
+                    <div class="pt-4 border-t mt-4">
+                        <label class="flex items-center text-sm font-medium text-gray-700">
+                            <input type="checkbox" checked class="mr-2 accent-blue-600">
+                            Dit planinitiatief is niet in strijd met ons GRS of gemeentelijk beleidsplan
+                        </label>
+                    </div>
+
+                    <button class="px-3 py-1 bg-white border border-gray-300 text-gray-700 rounded-lg text-sm hover:bg-gray-100 mt-2">Opslaan</button>
+                </div>
+            `},
+            4: { title: "4. Oppervlakte", cta: "Bevestig oppervlakte", formHtml: `
+                <h4 class="font-bold text-gray-700 mb-4">Oppervlaktebeheer</h4>
+                <div class="space-y-4">
+                    <label class="block text-sm font-medium text-gray-700">Totale oppervlakte (contour)</label>
+                    <input type="text" value="6,09 ha" disabled class="w-full p-2 border border-gray-300 rounded-lg bg-gray-100 text-sm">
+                    
+                    <label class="block text-sm font-medium text-gray-700 mt-4">Effectief compenseerbare oppervlakte</label>
+                    <input type="text" value="5,42 ha (89%)" disabled class="w-full p-2 border border-gray-300 rounded-lg bg-gray-100 text-sm">
+                    
+                    <div class="pt-4 border-t mt-4 space-y-2">
+                        <label class="block text-sm font-medium text-gray-700">Oppervlaktenormen</label>
+                        <label class="flex items-center"><input type="radio" name="normen" class="mr-2 accent-blue-600"> Vast</label>
+                        <label class="flex items-center"><input type="radio" name="normen" checked class="mr-2 accent-blue-600"> Flexibel</label>
+                        
+                        <label class="block text-sm font-medium text-gray-700 mt-3">Flexibiliteits marge</label>
+                        <select class="w-full p-2 border border-gray-300 rounded-lg text-sm bg-white">
+                            <option>5%</option>
+                            <option>10%</option>
+                        </select>
+                        <label class="text-xs text-gray-500 pt-1 block">Effectief inzetbare oppervlakte: 89%</label>
+                    </div>
+                </div>
+            `},
+            5: { title: "5. Controle", cta: "Aanvraag indienen", formHtml: `
+                <h4 class="font-bold text-gray-700 mb-4">Dossier controle</h4>
+                <div class="space-y-4">
+                    <p class="text-sm font-semibold mb-2 border-b pb-1">Volledigheid & inconsistenties</p>
+                    <div class="flex justify-between items-center text-sm p-2 rounded-lg bg-green-50 border border-green-300">
+                        <span class="text-green-700">✓ Contouren gesloten & valide</span>
+                    </div>
+                    <div class="flex justify-between items-center text-sm p-2 rounded-lg bg-green-50 border border-green-300">
+                        <span class="text-green-700">✓ Metadata ingevuld</span>
+                    </div>
+                    <div class="flex justify-between items-center text-sm p-2 rounded-lg bg-red-50 border border-red-300">
+                        <span class="text-red-700">✕ Status ontbreekt (moet nog geclassificeerd worden)</span>
+                        <button class="text-blue-600 text-xs font-semibold hover:underline">Bewerk inconsistentie</button>
+                    </div>
+                    
+                    <p class="text-sm font-semibold mt-4 pt-3 border-t">Classificatie & werkelijk compenseerbare oppervlakte</p>
+                    <input type="text" value="Classificatie: Vraag (automatisch toegekend)" disabled class="w-full p-2 border border-gray-300 rounded-lg bg-gray-100 text-sm">
+                    <input type="text" value="Werkelijk compenseerbare oppervlakte: 89%" disabled class="w-full p-2 border border-gray-300 rounded-lg bg-gray-100 text-sm mt-2">
+                    
+                    <p class="text-sm font-semibold mt-4 pt-3 border-t">Aanvraag type</p>
+                    <div class="flex space-x-4 justify-between">
+                        <button onclick="navigate(1)" class="px-3 py-2 bg-black text-white rounded-lg text-sm nav-button hover:bg-gray-800 w-1/2">Indienen pre-advies</button>
+                        <button onclick="navigate(1)" class="px-3 py-2 bg-black text-white rounded-lg text-sm nav-button hover:bg-gray-800 w-1/2">Aanvraag indienen</button>
+                    </div>
+                </div>
+            `},
+        };
+        
+        function updateStepVisuals(step) {
+            document.querySelectorAll('.flow-step').forEach((el, index) => {
+                el.classList.remove('active');
+                el.querySelector('.step-dot').classList.remove('bg-blue-500');
+                el.querySelector('.step-dot').classList.add('bg-gray-400');
+                if (index + 1 === step) {
+                    el.classList.add('active');
+                    el.querySelector('.step-dot').classList.add('bg-blue-500');
+                    el.querySelector('.step-dot').classList.remove('bg-gray-400');
+                }
+            });
+            
+            const sidebar = document.getElementById('kaartlagen-box');
+            if (sidebar) {
+                if (step >= 1 && step <= 4) {
+                    sidebar.classList.remove('hidden');
+                } else {
+                    sidebar.classList.add('hidden');
+                }
+            }
+        }
+        
+        function setStep(step) {
+            if (step < 1 || step > totalSteps) return;
+            currentStep = step;
+            updateStepVisuals(step);
+            
+            const data = stepData[step];
+            document.getElementById('step-content-container').innerHTML = data.formHtml;
+            
+            const dossierTitleElement = document.getElementById('dossier-title');
+            if (dossierTitleElement) {
+                dossierTitleElement.textContent = `Dossier: Konijnenberg - ${data.title.split('. ')[1]}`;
+            }
+            
+            const btnNext = document.getElementById('btn-next');
+            const btnBack = document.getElementById('btn-back');
+
+            if (step === totalSteps) {
+                if (btnNext) btnNext.classList.add('hidden');
+                if (btnBack) btnBack.classList.remove('hidden');
+            } else {
+                if (btnNext) {
+                    btnNext.classList.remove('hidden');
+                    btnNext.textContent = data.cta + ' >';
+                }
+                if (btnBack) {
+                    if (step === 1) {
+                        btnBack.classList.add('hidden');
+                    } else {
+                        btnBack.classList.remove('hidden');
+                    }
+                }
+            }
+        }
+        
+        function navigate(direction) {
+            let nextStep = currentStep + direction;
+            if (nextStep > totalSteps) {
+                // Indiening afgerond -> tussenscherm
+                setModule('success');
+            } else if (nextStep < 1) {
+                setModule('overview');
+            } else {
+                setStep(nextStep);
+            }
+        }
+        
+        function setModule(moduleName, data = null) {
+            const moduleIds = ['module-overview', 'module-start', 'module-flow', 'module-matches', 'module-match-detail', 'success-view'];
+            
+            moduleIds.forEach(id => {
+                const mod = document.getElementById(id);
+                if (mod) mod.classList.add('hidden');
+            });
+
+            if (moduleName === 'flow') {
+                const flowModule = document.getElementById('module-flow');
+                if (flowModule) flowModule.classList.remove('hidden');
+                setStep(data || 1);
+            } else if (moduleName === 'matches') {
+                const matchesModule = document.getElementById('module-matches');
+                if (matchesModule) matchesModule.classList.remove('hidden');
+            } else if (moduleName === 'match-detail') {
+                const matchDetailModule = document.getElementById('module-match-detail');
+                if (matchDetailModule) matchDetailModule.classList.remove('hidden');
+            } else if (moduleName === 'success') {
+                const successView = document.getElementById('success-view');
+                if (successView) successView.classList.remove('hidden');
+            } else {
+                const targetModule = document.getElementById(`module-${moduleName}`);
+                if (targetModule) targetModule.classList.remove('hidden');
+            }
+
+            currentModule = moduleName;
+        }
+        
+        window.onload = function() {
+            setModule('overview');
+        };
+    </script>
+</body>
+</html>
