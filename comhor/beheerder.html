@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="nl">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Beheerder Dossier Management Systeem</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background-color: #f7f9fb; }
+        .progress-step { transition: color 0.3s, border-color 0.3s; }
+        .progress-step.active { border-color: #10B981; color: #10B981; }
+        .step-dot { transition: background-color 0.3s; }
+
+        .list-row { transition: background-color 0.2s; cursor: pointer; } 
+        .list-row:hover { background-color: #f0f4f8; }
+
+        .status-badge { display: inline-flex; align-items: center; justify-content: center; padding: 0.25rem 0.65rem; border-radius: 9999px; font-size: 0.75rem; font-weight: 500; }
+        .status-badge-go { background-color: #D1FAE5; color: #059669; }
+        .status-badge-nogo { background-color: #FEE2E2; color: #EF4444; }
+        .status-badge-cond { background-color: #FEF3C7; color: #D97706; }
+        .status-badge-default { background-color: #E5E7EB; color: #4B5563; }
+
+        .detail-action-button { cursor: pointer; padding: 0.5rem; border-radius: 9999px; transition: background-color 0.15s; }
+        .detail-action-button:hover { background-color: #E5E7EB; }
+
+        .criteria-row { cursor: pointer; transition: background-color 0.15s; }
+        .criteria-row:hover { background-color: #F3F4F6; }
+        
+        .criteria-row-action-required {
+            background-color: #FEF2F2;
+            border-left: 4px solid #DC2626;
+        }
+        .criteria-row-action-required:hover {
+            background-color: #FEE2E2;
+        }
+        
+        .dossier-module-view { min-height: 600px; }
+        .nav-button-module { transition: transform 0.1s, box-shadow 0.1s; }
+        .nav-button-module:active { transform: translateY(1px); box-shadow: none; }
+
+        .mini-map-placeholder {
+            background-image: url('https://placehold.co/400x250/F1F5F9/1D4ED8?text=plancontour');
+            background-size: cover;
+            background-position: center;
+            border-radius: 0.5rem;
+            height: 250px;
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .match-status-badge {
+            font-size: 0.65rem; 
+            padding: 0.1rem 0.4rem; 
+            font-weight: 600; 
+            line-height: 1rem;
+        }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+<header class="mb-6 flex justify-between items-center pb-4 border-b border-gray-200">
+    <h1 class="text-2xl font-bold text-gray-800">Dossier Beheer</h1>
+    <div class="flex items-center space-x-3">
+        <span class="text-sm text-gray-500">Ingelogd als:</span>
+        <span class="px-3 py-1 bg-blue-500 text-white text-sm font-semibold rounded-full shadow-md">Beheerder</span>
+    </div>
+</header>
+
+<main class="max-w-7xl mx-auto">
+    <!-- DASHBOARD -->
+    <div id="dashboard-view" class="view">
+        <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-6">
+            <h2 id="dossier-count-title" class="text-xl font-semibold text-gray-700 mb-4 md:mb-0">Alle Dossiers (6)</h2>
+            <div class="flex flex-wrap gap-3">
+                <select id="filter-regio" class="px-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-blue-500 focus:border-blue-500 shadow-sm">
+                    <option value="">Regio (Alle)</option>
+                    <option value="Antwerpen">Antwerpen</option>
+                    <option value="Kempen en Rivierenland">Kempen en Rivierenland</option>
+                </select>
+                <select id="filter-my-dossiers" class="px-4 py-2 border border-gray-300 rounded-lg text-sm font-semibold text-blue-700 focus:ring-blue-500 focus:border-blue-500 shadow-sm">
+                    <option value="all">Alle Dossiers</option>
+                    <option value="mine">Mijn Dossiers</option>
+                </select>
+                <select id="filter-status" class="px-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-blue-500 focus:border-blue-500 shadow-sm">
+                    <option value="">Status (Alle)</option>
+                    <option>Aanvraag</option>
+                    <option>Check door provincie</option>
+                    <option>In gesprek</option>
+                    <option>Beslist</option>
+                    <option>Gematcht</option>
+                </select>
+                <select id="filter-type" class="px-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-blue-500 focus:border-blue-500 shadow-sm">
+                    <option value="">Type (Vraag/Aanbod)</option>
+                    <option>Vraag</option>
+                    <option>Aanbod</option>
+                </select>
+                <select id="filter-type-aanvraag" class="px-4 py-2 border border-gray-300 rounded-lg text-sm focus:ring-blue-500 focus:border-blue-500 shadow-sm">
+                    <option value="">Type (Preadvies/Definitief)</option>
+                    <option>Preadvies</option>
+                    <option>Definitief</option>
+                </select>
+
+                <div class="inline-flex rounded-lg shadow-sm border border-gray-300">
+                    <button id="toggle-list" class="px-4 py-2 text-sm font-medium rounded-l-lg bg-white text-gray-700 hover:bg-gray-50 transition-colors">
+                        Lijst
+                    </button>
+                    <button id="toggle-gis" class="px-4 py-2 text-sm font-medium rounded-r-lg bg-gray-100 text-gray-500 hover:bg-gray-200 transition-colors">
+                        GIS-weergave
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- LIJST -->
+        <div id="dossier-list-container" class="bg-white rounded-xl shadow-lg overflow-hidden border border-gray-200">
+            <table class="min-w-full divide-y divide-gray-200">
+                <thead class="bg-gray-50">
+                    <tr>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Naam</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden sm:table-cell">Adres</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">Opp</th>
+                        <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">Regio</th>
+                        <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">Type Aanvraag</th>
+                        <th class="px-2 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden md:table-cell">Type Compensatie</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider hidden lg:table-cell">Update</th>
+                        <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Status</th>
+                        <th class="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">Acties</th>
+                    </tr>
+                </thead>
+                <tbody id="dossier-list-body" class="divide-y divide-gray-200"></tbody>
+            </table>
+            <div id="empty-list-msg" class="text-center p-6 text-gray-500 hidden">Geen dossiers gevonden met de geselecteerde filters.</div>
+        </div>
+
+        <!-- GIS-OVERVIEW -->
+        <div id="dossier-gis-container" class="bg-white rounded-xl shadow-lg p-4 h-[600px] border border-gray-200 hidden">
+            <div class="h-full w-full bg-gray-200 flex items-center justify-center text-gray-500 text-xl font-medium relative rounded-lg cursor-pointer">
+                <div class="absolute top-4 left-4 bg-white p-3 rounded-lg shadow-md text-sm font-semibold border border-gray-200">
+                    <h3 class="font-bold mb-1 border-b pb-1 text-gray-700">Kleurcode Dossiers</h3>
+                    <p class="mb-1"><span class="p-1 inline-block w-4 h-4 bg-green-500 rounded-full align-middle mr-2"></span> Vraag (Definitief)</p>
+                    <p class="mb-1"><span class="p-1 inline-block w-4 h-4 bg-green-200 rounded-full align-middle mr-2"></span> Vraag (Preadvies)</p>
+                    <p class="mb-1"><span class="p-1 inline-block w-4 h-4 bg-blue-500 rounded-full align-middle mr-2"></span> Aanbod (Definitief)</p>
+                    <p><span class="p-1 inline-block w-4 h-4 bg-blue-200 rounded-full align-middle mr-2"></span> Aanbod (Preadvies)</p>
+                </div>
+
+                <p>GIS-kaartweergave van alle plancontouren (Placeholder)</p>
+
+                <div id="gis-hover-info" class="absolute bottom-4 left-4 bg-white p-4 rounded-lg shadow-xl text-sm w-64 hidden border border-gray-300">
+                    <p class="font-bold text-gray-800">Dossier: Konijnenberg</p>
+                    <p class="text-gray-600 text-xs">Type: Vraag (Definitief) | Status: Check Provincie</p>
+                    <p class="text-blue-600 mt-2 cursor-pointer font-medium" onclick="goToDetail(1)">Bekijk Detail &gt;</p>
+                </div>
+
+                <p class="absolute bottom-4 right-4 text-sm text-center italic text-gray-400">Interactie: Hover/klik toont compacte samenvatting.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- DETAIL -->
+    <div id="detail-view" class="view hidden">
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-6 pb-4 border-b border-gray-200">
+            <button onclick="goBackToDashboard()" class="text-blue-600 hover:text-blue-800 text-sm font-medium flex items-center">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1"><path d="m15 18-6-6 6-6"/></svg>
+                Terug naar Overzicht Dossiers
+            </button>
+            <div class="flex items-center space-x-3">
+                <h2 id="dossier-detail-title" class="text-2xl font-bold text-gray-800">Konijnenberg</h2>
+                <span id="dossier-status-badge" class="status-badge status-badge-cond text-lg font-semibold shadow-md">Check door provincie</span>
+            </div>
+            <button onclick="setDetailTab('gis-visualisation')" class="px-3 py-1 bg-gray-200 text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-300 transition-colors flex items-center shadow-sm">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21 3 6"/></svg>
+                Toon Kaart
+            </button>
+        </div>
+
+        <!-- Hoofdnavigatie -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+            <button onclick="setDetailTab('info')" id="nav-info" class="nav-button-module p-6 text-center rounded-xl border-2 border-blue-500 transition-colors shadow-lg bg-white">
+                <h3 class="font-bold text-xl text-blue-600">1. Informatie (Info)</h3>
+                <p class="text-sm text-gray-500 mt-1">Basisgegevens &amp; Context</p>
+            </button>
+            <button onclick="setDetailTab('criteria')" id="nav-criteria" class="nav-button-module p-6 text-center rounded-xl border-2 hover:border-blue-500 transition-colors shadow-lg bg-white">
+                <h3 class="font-bold text-xl text-blue-600">2. Criteria-analyse (4a)</h3>
+                <p class="text-sm text-gray-500 mt-1">Beoordeling &amp; Rapportering</p>
+            </button>
+            <button onclick="setDetailTab('match')" id="nav-match" class="nav-button-module p-6 text-center rounded-xl border-2 hover:border-blue-500 transition-colors shadow-lg bg-white">
+                <h3 class="font-bold text-xl text-blue-600">3. Match-beheer (4b)</h3>
+                <p class="text-sm text-gray-500 mt-1">Lijsten, GIS &amp; Rapportage</p>
+            </button>
+        </div>
+
+        <div class="dossier-module-view bg-white rounded-xl shadow-lg p-6 border border-gray-200">
+
+            <!-- MODULE INFO -->
+            <div id="module-info" class="active-module">
+                <h3 class="font-semibold text-xl border-b pb-2 mb-4 text-gray-800">Basis Dossiergegevens</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="space-y-4">
+                        <h4 class="font-semibold text-lg mb-2 border-b pb-1 text-gray-700">Algemene Gegevens</h4>
+                        <p class="text-gray-600"><span class="font-semibold text-gray-800 w-32 inline-block">Status:</span> Check door provincie</p>
+                        <p class="text-gray-600"><span class="font-semibold text-gray-800 w-32 inline-block">Gemeente:</span> Antwerpen</p>
+                        <p class="text-gray-600"><span class="font-semibold text-gray-800 w-32 inline-block">Oppervlakte:</span> 6,09 ha</p>
+                        <p class="text-gray-600"><span class="font-semibold text-gray-800 w-32 inline-block">Type:</span> Vraag (Definitief)</p>
+                        <p class="text-gray-600"><span class="font-semibold text-gray-800 w-32 inline-block">Risicofactor:</span> Tijdsdruk (Hoog)</p>
+                        <h4 class="font-semibold text-lg mb-2 border-b pt-4 pb-1 text-gray-700">Bestemming &amp; Contact</h4>
+                        <p class="text-sm text-gray-600"><span class="font-semibold text-gray-800 w-32 inline-block">Huidig:</span> Industrie</p>
+                        <p class="text-sm text-gray-600"><span class="font-semibold text-gray-800 w-32 inline-block">Nieuw:</span> Wonen</p>
+                        <div class="mt-4 pt-3 border-t border-gray-200">
+                            <p class="text-sm text-gray-600"><span class="font-semibold text-gray-800 w-32 inline-block">Contact:</span> Jan Peeters</p>
+                            <p class="text-xs text-blue-500 pl-32">jan.peeters@voorbeeld.be</p>
+                        </div>
+                    </div>
+
+                    <div class="bg-gray-50 p-4 rounded-lg border border-gray-200 flex flex-col justify-between">
+                        <div>
+                            <h4 class="font-semibold text-lg mb-2 border-b pb-1 text-gray-700">Visualisatie plancontour</h4>
+                            <div class="mini-map-placeholder">
+                                <p class="text-white text-lg font-bold">plancontour</p>
+                            </div>
+                        </div>
+                        <button onclick="setDetailTab('gis-visualisation')" class="mt-4 bg-gray-200 text-gray-700 px-4 py-2 rounded-lg font-semibold shadow-md hover:bg-gray-300 transition-colors flex items-center justify-center">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                            Vergroot Kaart / Volledige GIS-Visualisatie
+                        </button>
+                    </div>
+                </div>
+                <div class="mt-8 pt-4 border-t border-gray-200">
+                    <button onclick="setDetailTab('criteria')" class="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold shadow-md hover:bg-blue-700 transition-colors">
+                        Ga naar Criteria-analyse
+                    </button>
+                </div>
+            </div>
+
+            <!-- MODULE CRITERIA OVERZICHT -->
+            <div id="module-criteria" class="hidden active-module">
+                <h3 class="text-xl font-semibold mb-4 border-b pb-2">Criteria-check Overzicht</h3>
+                <!-- Huidige bestemming -->
+                <div class="mb-8">
+                    <h4 class="text-lg font-semibold mb-3 text-gray-700">Huidige Bestemming (Industrie)</h4>
+                    <div class="bg-white rounded-lg overflow-hidden border border-gray-200">
+                        <div class="grid grid-cols-12 p-3 font-bold text-xs uppercase text-gray-600 border-b border-gray-200 bg-gray-50">
+                            <div class="col-span-4">Kaartlaag</div>
+                            <div class="col-span-8">Resultaat</div>
+                        </div>
+                        <div class="grid grid-cols-12 p-3 text-sm criteria-row border-b border-green-200">
+                            <div class="col-span-4 font-medium text-green-700">K1: WORG</div>
+                            <div class="col-span-8 flex items-center">
+                                <span id="overview-k1-status" class="status-badge status-badge-go mr-4">GO</span>
+                                <span class="text-gray-600 text-xs">Niet gelegen in een WORG.</span>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-12 p-3 text-sm criteria-row border-b border-green-200">
+                            <div class="col-span-4 font-medium text-green-700">K2: Regionale logistiek</div>
+                            <div class="col-span-8 flex items-center">
+                                <span class="status-badge status-badge-go mr-4">GO</span>
+                                <span class="text-gray-600 text-xs">Op 10 km van een regionale logistieke zone.</span>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-12 p-3 text-sm criteria-row border-b border-yellow-200">
+                            <div class="col-span-4 font-medium text-yellow-700">K3: Provinciale kansenkaart</div>
+                            <div class="col-span-8 flex items-center">
+                                <span class="status-badge status-badge-cond mr-4">GO MET VOORWAARDEN</span>
+                                <span class="text-gray-600 text-xs">Opportuniteit voor verweven bedrijvigheid (met voorwaarden).</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Nieuwe bestemming -->
+                <div class="mb-8">
+                    <h4 class="text-lg font-semibold mb-3 text-gray-700">Nieuwe Bestemming (Wonen)</h4>
+                    <div class="bg-white rounded-lg overflow-hidden border border-gray-200">
+                        <div class="grid grid-cols-12 p-3 font-bold text-xs uppercase text-gray-600 border-b border-gray-200 bg-gray-50">
+                            <div class="col-span-4">Kaartlaag</div>
+                            <div class="col-span-8">Resultaat</div>
+                        </div>
+                        <div class="grid grid-cols-12 p-3 text-sm criteria-row border-b border-yellow-200" onclick="goToCriteriaDetail('K1_N', 'Nieuw')">
+                            <div class="col-span-4 font-medium text-yellow-700">K1: Pluviale kaart</div>
+                            <div class="col-span-8 flex items-center">
+                                <span class="status-badge status-badge-cond mr-4">GO MET VOORWAARDEN</span>
+                                <span class="text-gray-600 text-xs">Kleine kans op overstromingen (mitigerende maatregelen vereist).</span>
+                            </div>
+                        </div>
+                        <div id="row-k2-n" class="grid grid-cols-12 p-3 text-sm criteria-row border-b border-red-200 criteria-row-action-required" onclick="goToCriteriaDetail('K2_N', 'Nieuw')">
+                            <div class="col-span-4 font-medium text-red-700">K2: Voorzieningenniveau</div>
+                            <div class="col-span-8 flex items-center">
+                                <span class="status-badge status-badge-nogo mr-4">NO GO</span>
+                                <span class="text-gray-600 text-xs ml-2">Slecht voorzieningenniveau binnen loopafstand.</span>
+                            </div>
+                        </div>
+                        <div class="grid grid-cols-12 p-3 text-sm criteria-row border-b border-green-200" onclick="goToCriteriaDetail('K3_N', 'Nieuw')">
+                            <div class="col-span-4 font-medium text-green-700">K3: Mobiliteit</div>
+                            <div class="col-span-8 flex items-center">
+                                <span class="status-badge status-badge-go mr-4">GO</span>
+                                <span class="text-gray-600 text-xs">Hoge knooppuntwaarde, goede bereikbaarheid openbaar vervoer.</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-8 pt-4 border-t border-gray-200">
+                    <h4 class="font-semibold text-gray-700 mb-2">Rapportage</h4>
+                    <div id="decision-control-area">
+                        <p id="decision-prompt-text" class="font-semibold text-gray-700"></p>
+                    </div>
+                    <button onclick="setDetailTab('report')" class="bg-blue-600 text-white px-6 py-3 rounded-lg font-semibold shadow-md hover:bg-blue-700 transition-colors mt-4 flex items-center">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/><polyline points="10 9 9 9 8 9"/></svg>
+                        Rapport Raadplegen
+                    </button>
+                </div>
+            </div>
+
+            <!-- MODULE CRITERIA DETAIL -->
+            <div id="module-criteria-detail" class="hidden active-module">
+                <button onclick="setDetailTab('criteria')" class="text-blue-600 hover:text-blue-800 text-sm font-medium mb-4 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1"><path d="m15 18-6-6 6-6"/></svg>
+                    Terug naar Overzicht Criteria
+                </button>
+                <h3 class="text-xl font-semibold mb-2">Analyse Detail: <span id="current-criteria-name" class="text-blue-600">K2: Voorzieningenniveau</span></h3>
+                <p class="text-sm text-gray-600 mb-6">Bestemming: <span id="current-criteria-dest">Nieuw (Wonen)</span></p>
+
+                <div class="flex flex-col lg:flex-row gap-6">
+                    <div class="lg:w-1/2">
+                        <div class="p-4 border border-gray-200 rounded-lg bg-gray-50 mb-6">
+                            <h4 class="font-bold mb-2">Context &amp; Resultaat</h4>
+                            <p class="text-sm mb-2"><span class="font-semibold">Context:</span> <span id="current-criteria-context">Slecht voorzieningenniveau binnen loopafstand.</span></p>
+                            <p class="text-sm"><span class="font-semibold">Resultaat:</span> <span id="current-criteria-result" class="status-badge status-badge-nogo">NO GO</span></p>
+                        </div>
+
+                        <div id="override-section" class="mb-8 p-4 border-2 border-red-300 rounded-lg bg-red-50 hidden">
+                            <h4 class="text-lg font-bold text-red-700 mb-3">No-Go Aanpassing &amp; Fiattering</h4>
+                            <p class="text-sm text-gray-700 mb-3">U kunt de 'No Go' aanpassen met motivering. Dit vereist fiattering door het teamhoofd gemeentelijk steunpunt.</p>
+                            <button id="override-trigger-button" onclick="showOverrideModal('K2_N')" class="bg-red-600 text-white px-4 py-2 rounded-lg text-sm font-semibold shadow-md hover:bg-red-700 transition-colors">
+                                No-Go Aanpassen / Motiveren
+                            </button>
+                            <p id="k1-override-status-display" class="mt-3 text-sm text-green-600 font-medium hidden">
+                                Status: AANGEPAST (GO) - Goedgekeurd door Teamhoofd.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="lg:w-1/2">
+                        <div class="bg-gray-100 p-4 rounded-xl h-[450px] border border-gray-300 relative">
+                            <h4 class="font-bold text-gray-700 mb-2">GIS-Visualisatie plancontour (<span id="gis-criteria-layer">criterium K2</span>)</h4>
+                            <div id="mini-gis-map" class="h-full bg-cover bg-center rounded-lg shadow-inner" style="background-image: url('https://placehold.co/600x400/D1D5DB/4B5563?text=Kaartlaag+Weergave+(K1+actief)')">
+                                <div class="absolute top-3 right-3 bg-white p-3 rounded-lg shadow-xl w-40 border border-gray-200">
+                                    <p class="font-semibold text-sm mb-2 border-b pb-1">Kaartlagen</p>
+                                    <label class="flex items-center text-xs mb-1"><input type="checkbox" checked class="mr-2 accent-blue-500"> Plancontour</label>
+                                    <label class="flex items-center text-xs mb-1"><input type="checkbox" checked class="mr-2 accent-red-500" id="gis-layer-k1"> K2: Voorzieningenniveau</label>
+                                    <label class="flex items-center text-xs mb-1"><input type="checkbox" class="mr-2 accent-green-500"> GRP</label>
+                                    <p class="text-xs mt-2 text-blue-600 cursor-pointer border-t pt-1">Pas transparantie aan</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MODULE MATCH-LIJST -->
+            <div id="module-match" class="hidden active-module">
+                <h3 class="text-xl font-semibold mb-4 border-b pb-2">Match-beheer</h3>
+                <p class="text-gray-600 mb-6">Overzicht van potentiële matches. Exporteer de lijst voor verdere analyse, of bekijk de GIS-visualisatie om de ruimtelijke impact te zien.</p>
+
+                <div class="flex justify-between items-center mb-4 p-3 bg-gray-100 rounded-lg border border-gray-200">
+                    <span class="font-medium text-lg">Huidige Matches (4)</span>
+                    <div class="space-x-3 flex">
+                        <button class="px-4 py-2 bg-white text-gray-700 rounded-lg text-sm font-medium hover:bg-gray-200 transition-colors flex items-center border border-gray-300 shadow-sm">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" x2="12" y1="15" y2="3"/></svg>
+                            Export (Excel)
+                        </button>
+                        <button onclick="setDetailTab('match-gis')" class="px-4 py-2 bg-blue-600 text-white rounded-lg text-sm font-medium hover:bg-blue-700 transition-colors flex items-center shadow-md">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-2"><polygon points="3 6 9 3 15 6 21 3 21 18 15 21 9 18 3 21 3 6"/></svg>
+                            GIS-Visualisatie
+                        </button>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg divide-y divide-gray-200 border overflow-x-auto">
+                    <div class="grid grid-cols-10 p-4 bg-gray-50 text-xs uppercase font-semibold text-gray-600 min-w-[750px]">
+                        <div class="col-span-2">Naam Match</div>
+                        <div class="col-span-1">Gemeente</div>
+                        <div class="col-span-1">Status</div>
+                        <div class="col-span-1 text-right">Oppervlakte</div>
+                        <div class="col-span-1 text-center">Score</div>
+                        <div class="col-span-4">Motivatie Rangschikking</div>
+                    </div>
+                    <div class="grid grid-cols-10 p-4 hover:bg-gray-50 transition-colors min-w-[750px]">
+                        <div class="col-span-2 font-medium">De Wilde Zwaan</div>
+                        <div class="col-span-1 text-sm text-gray-600">Mechelen</div>
+                        <div class="col-span-1 text-sm"><span class="status-badge match-status-badge status-badge-go">In onderhandeling</span></div>
+                        <div class="col-span-1 text-sm text-right">8,5 ha</div>
+                        <div class="col-span-1 text-sm text-center font-bold text-green-700">92%</div>
+                        <div class="col-span-4 text-sm text-gray-700">Hoogste score: Grote Omvang, Beste match op Bestemmingstype (Hard → Zacht).</div>
+                    </div>
+                    <div class="grid grid-cols-10 p-4 hover:bg-gray-50 transition-colors min-w-[750px]">
+                        <div class="col-span-2 font-medium">Project X</div>
+                        <div class="col-span-1 text-sm text-gray-600">Boom</div>
+                        <div class="col-span-1 text-sm"><span class="status-badge match-status-badge status-badge-default">Nog geen init.</span></div>
+                        <div class="col-span-1 text-sm text-right">4,0 ha</div>
+                        <div class="col-span-1 text-sm text-center text-gray-700">88%</div>
+                        <div class="col-span-4 text-sm text-gray-700">Goede match: Voldoet aan Beleidsmatig Draagvlak en goede Ontsluiting. Complexe Eigendomsstructuur.</div>
+                    </div>
+                    <div class="grid grid-cols-10 p-4 hover:bg-gray-50 transition-colors min-w-[750px]">
+                        <div class="col-span-2 font-medium">Grote Weide</div>
+                        <div class="col-span-1 text-sm text-gray-600">Puurs</div>
+                        <div class="col-span-1 text-sm">
+                            <span class="status-badge match-status-badge status-badge-nogo">In Proc. (Gelockt)</span>
+                        </div>
+                        <div class="col-span-1 text-sm text-right">2,1 ha</div>
+                        <div class="col-span-1 text-sm text-center font-bold text-red-700">65%</div>
+                        <div class="col-span-4 text-sm text-gray-700">Lage Kwaliteit/Functionaliteit van de bestemming (Overstromingsgevoeligheid) en kleine Omvang.</div>
+                    </div>
+                    <div class="grid grid-cols-10 p-4 hover:bg-gray-50 transition-colors min-w-[750px]">
+                        <div class="col-span-2 font-medium">Boomse Weide</div>
+                        <div class="col-span-1 text-sm text-gray-600">Boom</div>
+                        <div class="col-span-1 text-sm"><span class="status-badge match-status-badge status-badge-cond">In gesprek</span></div>
+                        <div class="col-span-1 text-sm text-right">1,2 ha</div>
+                        <div class="col-span-1 text-sm text-center text-yellow-700">78%</div>
+                        <div class="col-span-4 text-sm text-gray-700">Goede score op Planologische Bepalingen (snel), maar zeer kleine Omvang.</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MODULE RAPPORT -->
+            <div id="module-report" class="hidden active-module">
+                <button onclick="setDetailTab('criteria')" class="text-blue-600 hover:text-blue-800 text-sm font-medium mb-4 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1"><path d="m15 18-6-6 6-6"/></svg>
+                    Terug naar Criteria-analyse
+                </button>
+                <h3 class="text-xl font-semibold mb-4 border-b pb-2">Rapportering</h3>
+                <div class="p-6 border border-gray-200 rounded-lg bg-gray-50">
+                    <h4 class="font-bold text-lg mb-4 text-gray-800">Rapport aan Gemeente</h4>
+                    <div id="report-advice-container" class="mb-6 p-4 rounded-lg border-l-4"></div>
+                    <div class="mb-4 p-3 bg-white rounded-lg border border-yellow-300">
+                        <h5 class="font-semibold text-base mb-2 text-yellow-700">Opgelegde Voorwaarden</h5>
+                        <ul class="list-disc list-inside text-sm text-gray-600 pl-4">
+                            <li>Mitigerende maatregelen vereist vanwege kleine kans op overstromingen (K1: Pluviale Kaart).</li>
+                            <li>Voldoen aan de voorwaarden voor verweven bedrijvigheid (K3: Provinciale Kansenkaart).</li>
+                        </ul>
+                    </div>
+                    <div class="mb-4 p-3 bg-white rounded-lg border border-gray-300">
+                        <h5 class="font-semibold text-base mb-2 text-gray-700">Disclaimers</h5>
+                        <p class="text-sm text-gray-600">Dit advies is gebaseerd op de door u aangeleverde gegevens en de huidige stand van de GIS-kaartlagen. Het vervangt geen definitieve besluitvorming. Verklaring op eer over conformiteit met GRS/beleidsplan kon niet automatisch worden geverifieerd (zie Businesslogica).</p>
+                    </div>
+                    <div class="mb-4 p-3 bg-white rounded-lg border border-gray-300">
+                        <h5 class="font-semibold text-base mb-2 text-gray-700">Nuttige Links</h5>
+                        <p class="text-sm text-gray-600">Omzendbrief dd10/01/2020</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- MODULE MATCH-GIS -->
+            <div id="module-match-gis" class="hidden active-module">
+                <button onclick="setDetailTab('match')" class="text-blue-600 hover:text-blue-800 text-sm font-medium mb-4 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1"><path d="m15 18-6-6 6-6"/></svg>
+                    Terug naar Matchlijst
+                </button>
+                <div class="bg-gray-100 p-4 rounded-xl h-[500px] border border-gray-300 relative">
+                    <div class="h-full w-full bg-cover bg-center rounded-lg shadow-inner flex items-center justify-center text-gray-500 text-xl font-medium" style="background-image: url('https://placehold.co/600x500/D1D5DB/4B5563?text=GIS-Visualisatie+van+Matches')">
+                        <div class="absolute top-4 left-4 bg-white p-2 rounded-lg shadow-md text-sm font-semibold border border-gray-200">
+                            <h3 class="font-bold mb-1">Legenda Matches</h3>
+                            <p class="mb-1"><span class="p-1 inline-block w-4 h-4 bg-blue-600 rounded-full align-middle mr-2"></span> Aangevraagd Dossier</p>
+                            <p class="mb-1"><span class="p-1 inline-block w-4 h-4 bg-green-500 rounded-full align-middle mr-2"></span> Match: In Onderhandeling</p>
+                            <p><span class="p-1 inline-block w-4 h-4 bg-red-500 rounded-full align-middle mr-2"></span> Match: In Procedure (Gelockt)</p>
+                        </div>
+                        <p>GIS-Visualisatie: Matches rondom plancontour</p>
+                        <p class="absolute bottom-4 text-sm text-center italic">Overzicht van alle matches, met de optie om individuele matches te selecteren.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- NIEUWE MODULE: GROTE DOSSIERKAART -->
+            <div id="module-gis-visualisation" class="hidden active-module">
+                <button onclick="goBackFromGis()" class="text-blue-600 hover:text-blue-800 text-sm font-medium mb-4 flex items-center">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="mr-1"><path d="m15 18-6-6 6-6"/></svg>
+                    Terug naar <span id="gis-back-label" class="ml-1">Informatie (Info)</span>
+                </button>
+
+                <h3 class="font-semibold text-xl mb-4">Dossier Visualisatie (Grote Kaart)</h3>
+
+                <div class="bg-gray-100 rounded-2xl border border-gray-200 p-4 md:p-6">
+                    <div class="relative h-[420px] md:h-[500px] bg-slate-50 rounded-2xl border border-slate-200 flex items-center justify-center">
+                        <div class="absolute top-4 right-4 bg-white rounded-xl shadow-lg border border-gray-200 p-3 text-xs w-40">
+                            <p class="font-semibold text-gray-700 mb-2">Kaartlagen</p>
+                            <label class="flex items-center mb-1"><input type="checkbox" checked class="mr-2 accent-blue-500"> Plankcontour</label>
+                            <label class="flex items-center mb-1"><input type="checkbox" checked class="mr-2 accent-indigo-500"> Gewestplan</label>
+                            <label class="flex items-center mb-1"><input type="checkbox" class="mr-2 accent-gray-500"> Luchtfoto</label>
+                            <button class="mt-2 w-full border border-gray-200 rounded-lg px-2 py-1 text-[11px] text-gray-600 hover:bg-gray-50">
+                                Transparantie / Meten
+                            </button>
+                        </div>
+                        <p class="text-2xl md:text-3xl font-bold text-blue-600 text-center px-4">
+                            Grote GIS-Kaart Dossier Contour
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</main>
+
+<!-- MODAL OVERRIDE -->
+<div id="override-modal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50 p-4" onclick="if(event.target.id === 'override-modal') hideOverrideModal()">
+    <div class="bg-white rounded-xl shadow-2xl p-6 w-full max-w-lg">
+        <h3 class="text-xl font-bold mb-4">No Go Aanpassing: <span id="override-criteria-title">K1</span></h3>
+        <p class="text-sm text-gray-600 mb-4">Als beheerder kunt u de 'No Go' aanpassen met een dwingende motivering, wat fiattering door het teamhoofd vereist.</p>
+        <div class="mb-4">
+            <label for="override-motivation" class="block text-sm font-medium text-gray-700 mb-1">Motivering aanpassing</label>
+            <textarea id="override-motivation" rows="4" class="w-full p-3 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500" placeholder="Voer hier de gedetailleerde en dwingende motivering in (minimaal 20 tekens)..."></textarea>
+        </div>
+        <div class="flex justify-between items-center">
+            <button id="request-approval-btn" onclick="requestTeamHeadApproval()" class="bg-red-600 text-white px-4 py-2 rounded-lg font-semibold shadow-md hover:bg-red-700 transition-colors">
+                Verzoek Fiattering Teamhoofd
+            </button>
+            <button onclick="hideOverrideModal()" class="text-gray-600 hover:text-gray-900 px-4 py-2 rounded-lg transition-colors">Annuleren</button>
+        </div>
+        <p id="approval-status" class="mt-4 text-sm text-green-600 font-medium hidden">
+            Motivering ingediend. Wacht op fiattering door Teamhoofd.
+        </p>
+    </div>
+</div>
+
+<script>
+    const VIEWS = { DASHBOARD: 'dashboard', DETAIL: 'detail' };
+
+    const CRITERIA_DATA = {
+        'K1_H': { name: 'K1: WORG', context: 'Niet gelegen in een WORG.', result: 'GO', dest_huidig: 'Huidig (Industrie)', dest_nieuw: null, color: 'green' },
+        'K2_H': { name: 'K2: Regionale logistiek', context: 'Op 10 km van een regionale logistieke zone.', result: 'GO', dest_huidig: 'Huidig (Industrie)', dest_nieuw: null, color: 'green' },
+        'K3_H': { name: 'K3: Provinciale kansenkaart', context: 'Opportuniteit voor verweven bedrijvigheid.', result: 'GO MET VOORWAARDEN', dest_huidig: 'Huidig (Industrie)', dest_nieuw: null, color: 'yellow' },
+        'K1_N': { name: 'K1: Pluviale kaart', context: 'Kleine kans op overstromingen.', result: 'GO MET VOORWAARDEN', dest_huidig: null, dest_nieuw: 'Nieuw (Wonen)', color: 'yellow' },
+        'K2_N': { name: 'K2: Voorzieningenniveau', context: 'Slecht voorzieningenniveau binnen loopafstand.', result: 'NO GO', dest_huidig: null, dest_nieuw: 'Nieuw (Wonen)', color: 'red' },
+        'K3_N': { name: 'K3: Mobiliteit', context: 'Hoge knooppuntwaarde, goede bereikbaarheid openbaar vervoer.', result: 'GO', dest_huidig: null, dest_nieuw: 'Nieuw (Wonen)', color: 'green' },
+    };
+
+    const initialDossiers = [
+        { id: 1, name: "Konijnenberg", address: "Straatnaam 110, 20...", opp: "6,09 ha", regio: "Antwerpen", typeAanvraag: "Definitief", typeCompensatie: "Vraag", update: "12/12/2025", status: "Check door provincie", matches: 4, assignedTo: 'user_a' },
+        { id: 2, name: "De Cauwel", address: "Straatnaam 110, 20...", opp: "24,4 ha", regio: "Antwerpen", typeAanvraag: "Preadvies", typeCompensatie: "Aanbod", update: "12/12/2025", status: "In gesprek", matches: 0, assignedTo: 'user_b' },
+        { id: 3, name: "Prinsdom", address: "Straatnaam 110, 20...", opp: "4,1 ha", regio: "Antwerpen", typeAanvraag: "Definitief", typeCompensatie: "Vraag", update: "12/12/2025", status: "Beslist (GO)", matches: 5, assignedTo: 'user_a' },
+        { id: 4, name: "Burenbult", address: "Straatnaam 110, 20...", opp: "11,03 ha", regio: "Kempen en Rivierenland", typeAanvraag: "Definitief", typeCompensatie: "Aanbod", update: "12/12/2025", status: "Beslist (VOORWAARDEN)", matches: 2, assignedTo: 'user_c' },
+        { id: 5, name: "Travers", address: "Straatnaam 110, 20...", opp: "24,4 ha", regio: "Antwerpen", typeAanvraag: "Preadvies", typeCompensatie: "Vraag", update: "12/12/2025", status: "Aanvraag", matches: 0, assignedTo: 'user_a' },
+        { id: 6, name: "Polspotten", address: "Straatnaam 110, 20...", opp: "4,1 ha", regio: "Kempen en Rivierenland", typeAanvraag: "Definitief", typeCompensatie: "Aanbod", update: "12/12/2025", status: "Beslist (NO GO)", matches: 0, assignedTo: 'user_b' },
+    ];
+
+    const CURRENT_USER_ID = 'user_a';
+    const CURRENT_USER_REGION = 'Antwerpen';
+
+    let currentView = VIEWS.DASHBOARD;
+    let selectedDossierId = 1;
+    let activeModule = 'info';
+    let currentCriteria = 'K2_N';
+    let previousModule = 'info';
+    let isGisView = false;
+
+    let k1OverrideStatus = localStorage.getItem('k1_override_status') || 'NO GO';
+
+    function renderView() {
+        document.getElementById('dashboard-view').classList.add('hidden');
+        document.getElementById('detail-view').classList.add('hidden');
+
+        if (currentView === VIEWS.DASHBOARD) {
+            document.getElementById('dashboard-view').classList.remove('hidden');
+            const filterMine = document.getElementById('filter-my-dossiers').value === 'mine';
+            const selectedRegion = document.getElementById('filter-regio').value;
+            renderDossierList(isGisView, filterMine, selectedRegion);
+        } else {
+            document.getElementById('detail-view').classList.remove('hidden');
+            renderDetailView();
+        }
+    }
+
+    function getModuleLabel(modKey) {
+        if (['criteria', 'criteria-detail', 'report'].includes(modKey)) return 'Criteria-analyse (4a)';
+        if (['match', 'match-gis'].includes(modKey)) return 'Match-beheer (4b)';
+        return 'Informatie (Info)';
+    }
+
+    function renderDetailView() {
+        const dossier = initialDossiers.find(d => d.id === selectedDossierId);
+        if (!dossier) return;
+
+        document.getElementById('dossier-detail-title').textContent = dossier.name;
+        const statusBadge = document.getElementById('dossier-status-badge');
+        statusBadge.textContent = dossier.status;
+        statusBadge.className = `status-badge text-lg font-semibold shadow-md ${getDecisionColorClass(dossier.status)}`;
+
+        document.querySelectorAll('.active-module').forEach(el => el.classList.add('hidden'));
+        document.querySelectorAll('.nav-button-module').forEach(el => {
+            el.classList.remove('border-blue-500');
+            el.classList.add('hover:border-blue-500');
+        });
+
+        const moduleMap = {
+            'info': 'module-info',
+            'criteria': 'module-criteria',
+            'criteria-detail': 'module-criteria-detail',
+            'match': 'module-match',
+            'match-gis': 'module-match-gis',
+            'report': 'module-report',
+            'gis-visualisation': 'module-gis-visualisation',
+        };
+
+        const moduleToActivate = moduleMap[activeModule] || 'module-info';
+        const moduleEl = document.getElementById(moduleToActivate);
+        if (moduleEl) moduleEl.classList.remove('hidden');
+
+        let navButtonId = 'nav-info';
+
+        if (['criteria', 'criteria-detail', 'report'].includes(activeModule)) {
+            navButtonId = 'nav-criteria';
+            updateK1OverrideDisplay();
+        } else if (['match', 'match-gis'].includes(activeModule)) {
+            navButtonId = 'nav-match';
+        } else if (activeModule === 'gis-visualisation') {
+            if (['criteria', 'criteria-detail', 'report'].includes(previousModule)) {
+                navButtonId = 'nav-criteria';
+            } else if (['match', 'match-gis'].includes(previousModule)) {
+                navButtonId = 'nav-match';
+            } else {
+                navButtonId = 'nav-info';
+            }
+            const lbl = document.getElementById('gis-back-label');
+            if (lbl) lbl.textContent = getModuleLabel(previousModule);
+        }
+
+        const navButton = document.getElementById(navButtonId);
+        if (navButton) {
+            navButton.classList.add('border-blue-500');
+            navButton.classList.remove('hover:border-blue-500');
+        }
+
+        if (activeModule === 'criteria-detail') {
+            updateCriteriaDetailScreen(currentCriteria);
+        }
+
+        if (activeModule === 'report') {
+            updateReportContent();
+        }
+    }
+
+    function updateCriteriaDecisionButton() {
+        const isNoGoResolved = k1OverrideStatus === 'APPROVED';
+        const decisionPromptText = document.getElementById('decision-prompt-text');
+        if (!decisionPromptText) return;
+        decisionPromptText.textContent = isNoGoResolved
+            ? "Alle NO GO's opgelost. U kunt het definitieve rapport raadplegen en de beslissing vastleggen."
+            : "Controle: Er is nog een openstaand NO GO criterium (K2: Voorzieningenniveau). Dit moet eerst opgelost of gefiatteerd worden.";
+    }
+
+    function updateReportContent() {
+        const container = document.getElementById('report-advice-container');
+        if (k1OverrideStatus === 'APPROVED') {
+            container.innerHTML = `
+                <h5 class="font-bold text-green-700 mb-2">Positief Advies (Na Fiattering)</h5>
+                <p class="text-sm text-gray-700">De aanvraag wordt goedgekeurd. De aanvankelijke NO GO (K2) is na motivering en fiattering opgelost.</p>
+            `;
+            container.classList.add('bg-green-50', 'border-green-500');
+            container.classList.remove('bg-red-50', 'border-red-500');
+        } else {
+            container.innerHTML = `
+                <h5 class="font-bold text-red-700 mb-2">Negatief Advies (Openstaande NO GO)</h5>
+                <p class="text-sm text-gray-700">De aanvraag stuit op een conflict met het criterium 'K2: Voorzieningenniveau'. Zonder aanpassing of fiattering kan geen positief advies worden verleend.</p>
+            `;
+            container.classList.add('bg-red-50', 'border-red-500');
+            container.classList.remove('bg-green-50', 'border-green-500');
+        }
+    }
+
+    function getDecisionColorClass(status) {
+        if (status.includes('GO')) return 'status-badge-go';
+        if (status.includes('VOORWAARDEN') || status.includes('Check') || status.includes('gesprek')) return 'status-badge-cond';
+        if (status.includes('NO GO')) return 'status-badge-nogo';
+        return 'status-badge-default';
+    }
+
+    function setDetailTab(moduleName) {
+        if (moduleName === 'gis-visualisation') {
+            previousModule = activeModule;
+        }
+        activeModule = moduleName;
+        renderDetailView();
+    }
+
+    function goBackFromGis() {
+        activeModule = previousModule || 'info';
+        renderDetailView();
+    }
+
+    function goToDetail(id) {
+        selectedDossierId = id;
+        activeModule = 'info';
+        previousModule = 'info';
+        currentView = VIEWS.DETAIL;
+        renderView();
+    }
+
+    function goBackToDashboard() {
+        selectedDossierId = null;
+        currentView = VIEWS.DASHBOARD;
+        renderView();
+    }
+
+    function goToCriteriaDetail(criteria) {
+        if (criteria !== 'K2_N') {
+            console.log(`Navigatie geweigerd voor ${criteria}. Enkel K2: Voorzieningenniveau is actief.`);
+            return;
+        }
+        currentCriteria = criteria;
+        activeModule = 'criteria-detail';
+        renderDetailView();
+        showGisMap(criteria);
+    }
+
+    function updateCriteriaDetailScreen(criteria) {
+        const data = CRITERIA_DATA[criteria];
+        const destText = data.dest_huidig || data.dest_nieuw || 'Algemeen Dossier';
+        document.getElementById('current-criteria-name').textContent = data.name;
+        document.getElementById('current-criteria-dest').textContent = destText;
+        document.getElementById('current-criteria-context').textContent = data.context || 'N.v.t.';
+        const overrideSection = document.getElementById('override-section');
+        const criteriaResult = document.getElementById('current-criteria-result');
+        criteriaResult.textContent = data.result;
+        criteriaResult.className = `status-badge status-badge-${data.color}`;
+
+        if (criteria === 'K2_N') {
+            overrideSection.classList.remove('hidden');
+            updateK1OverrideDisplay();
+            document.getElementById('override-criteria-title').textContent = data.name;
+            document.getElementById('request-approval-btn').onclick = () => requestTeamHeadApproval('K2_N');
+        } else {
+            overrideSection.classList.add('hidden');
+        }
+        document.getElementById('gis-criteria-layer').textContent = data.name.split(':')[0];
+    }
+
+    function updateK1OverrideDisplay() {
+        const k1StatusDisplay = document.getElementById('k1-override-status-display');
+        const rowK2 = document.getElementById('row-k2-n');
+        if (!rowK2) return;
+
+        const k2StatusBadge = rowK2.querySelector('.status-badge');
+        const k1CriteriaResult = document.getElementById('current-criteria-result');
+        k1StatusDisplay.classList.add('hidden');
+
+        if (k1OverrideStatus === 'APPROVED') {
+            k1StatusDisplay.classList.remove('hidden');
+            k1StatusDisplay.textContent = 'Status: AANGEPAST (GO) - Goedgekeurd door Teamhoofd.';
+            document.getElementById('override-trigger-button').disabled = true;
+            rowK2.classList.remove('criteria-row-action-required', 'border-red-200');
+            rowK2.classList.add('border-b', 'border-green-200');
+            if (k2StatusBadge) {
+                k2StatusBadge.textContent = 'AANGEPAST (GO)';
+                k2StatusBadge.classList.remove('status-badge-nogo');
+                k2StatusBadge.classList.add('status-badge-go');
+            }
+            if (currentCriteria === 'K2_N' && k1CriteriaResult) {
+                k1CriteriaResult.textContent = 'AANGEPAST (GO)';
+                k1CriteriaResult.classList.remove('status-badge-nogo');
+                k1CriteriaResult.classList.add('status-badge-go');
+            }
+        } else if (k1OverrideStatus === 'PENDING') {
+            k1StatusDisplay.classList.remove('hidden');
+            k1StatusDisplay.textContent = 'Status: Wacht op fiattering door Teamhoofd...';
+            document.getElementById('override-trigger-button').disabled = true;
+        } else {
+            document.getElementById('override-trigger-button').disabled = false;
+            rowK2.classList.add('criteria-row-action-required');
+            if (k2StatusBadge) {
+                k2StatusBadge.textContent = 'NO GO';
+                k2StatusBadge.classList.add('status-badge-nogo');
+                k2StatusBadge.classList.remove('status-badge-go');
+            }
+            if (currentCriteria === 'K2_N' && k1CriteriaResult) {
+                k1CriteriaResult.textContent = 'NO GO';
+                k1CriteriaResult.classList.add('status-badge-nogo');
+                k1CriteriaResult.classList.remove('status-badge-go');
+            }
+        }
+        updateCriteriaDecisionButton();
+    }
+
+    function showOverrideModal(criteria) {
+        document.getElementById('override-criteria-title').textContent = CRITERIA_DATA[criteria].name;
+        document.getElementById('approval-status').classList.add('hidden');
+        document.getElementById('override-motivation').value = '';
+        document.getElementById('request-approval-btn').disabled = false;
+        document.getElementById('request-approval-btn').classList.remove('opacity-50', 'cursor-not-allowed');
+        document.getElementById('override-modal').classList.remove('hidden');
+    }
+
+    function hideOverrideModal() {
+        document.getElementById('override-modal').classList.add('hidden');
+    }
+
+    function requestTeamHeadApproval() {
+        const motivation = document.getElementById('override-motivation').value;
+        if (motivation.length < 20) {
+            console.error("Motivering is te kort. Minimaal 20 tekens vereist.");
+            return;
+        }
+        document.getElementById('request-approval-btn').disabled = true;
+        document.getElementById('request-approval-btn').classList.add('opacity-50', 'cursor-not-allowed');
+        document.getElementById('approval-status').classList.remove('hidden');
+        k1OverrideStatus = 'PENDING';
+        localStorage.setItem('k1_override_status', 'PENDING');
+        updateK1OverrideDisplay();
+        setTimeout(() => {
+            k1OverrideStatus = 'APPROVED';
+            localStorage.setItem('k1_override_status', 'APPROVED');
+            updateK1OverrideDisplay();
+            renderDetailView();
+        }, 3000);
+        hideOverrideModal();
+    }
+
+    function showGisMap(criteria) {
+        const criteriaKey = criteria.split('_')[0];
+        const layerState = {
+            'K3': { color: 'FEF3C7', text: 'D97706' },
+            'K2': { color: 'D1FAE5', text: '059669' },
+            'K1': { color: 'FEE2E2', text: 'EF4444' },
+        };
+        const state = layerState[criteriaKey] || { color: 'D1D5DB', text: '4B5563' };
+        const mapDiv = document.getElementById('mini-gis-map');
+        if (!mapDiv) return;
+        mapDiv.style.backgroundImage = `url('https://placehold.co/600x400/${state.color}/${state.text}?text=Kaartlaag+Weergave+(${criteriaKey}+actief)')`;
+        document.querySelectorAll('#mini-gis-map input[type="checkbox"]').forEach(checkbox => {
+            const layerName = checkbox.parentElement.textContent.trim();
+            checkbox.checked = layerName.toLowerCase().includes('plancontour');
+            if (layerName.includes(criteriaKey)) checkbox.checked = true;
+        });
+    }
+
+    function renderDossierList(gisView = false, filterMine = false, selectedRegion = "") {
+        const listContainer = document.getElementById('dossier-list-container');
+        const gisContainer = document.getElementById('dossier-gis-container');
+        const toggleListBtn = document.getElementById('toggle-list');
+        const toggleGisBtn = document.getElementById('toggle-gis');
+        const listBody = document.getElementById('dossier-list-body');
+        const dossierCountTitle = document.getElementById('dossier-count-title');
+
+        let filteredDossiers = initialDossiers;
+
+        if (selectedRegion) {
+            filteredDossiers = filteredDossiers.filter(d => d.regio === selectedRegion);
+        }
+        if (filterMine) {
+            if (CURRENT_USER_REGION) {
+                filteredDossiers = filteredDossiers.filter(d => d.regio === CURRENT_USER_REGION);
+            }
+            filteredDossiers = filteredDossiers.filter(d => d.assignedTo === CURRENT_USER_ID);
+            dossierCountTitle.textContent = `Mijn Dossiers (${filteredDossiers.length})`;
+        } else {
+            dossierCountTitle.textContent = `Alle Dossiers (${filteredDossiers.length})`;
+        }
+
+        if (gisView) {
+            listContainer.classList.add('hidden');
+            gisContainer.classList.remove('hidden');
+            toggleListBtn.classList.remove('bg-white', 'text-gray-700');
+            toggleListBtn.classList.add('bg-gray-100', 'text-gray-500');
+            toggleGisBtn.classList.remove('bg-gray-100', 'text-gray-500');
+            toggleGisBtn.classList.add('bg-white', 'text-gray-700');
+            document.getElementById('gis-hover-info').classList.remove('hidden');
+            return;
+        } else {
+            listContainer.classList.remove('hidden');
+            gisContainer.classList.add('hidden');
+            toggleListBtn.classList.remove('bg-gray-100', 'text-gray-500');
+            toggleListBtn.classList.add('bg-white', 'text-gray-700');
+            toggleGisBtn.classList.remove('bg-white', 'text-gray-700');
+            toggleGisBtn.classList.add('bg-gray-100', 'text-gray-500');
+            document.getElementById('gis-hover-info').classList.add('hidden');
+        }
+
+        listBody.innerHTML = '';
+        if (filteredDossiers.length === 0) {
+            document.getElementById('empty-list-msg').classList.remove('hidden');
+            return;
+        } else {
+            document.getElementById('empty-list-msg').classList.add('hidden');
+        }
+
+        filteredDossiers.forEach(d => {
+            const tr = document.createElement('tr');
+            tr.className = 'list-row';
+            tr.onclick = () => goToDetail(d.id);
+
+            const matchBadge = d.matches > 0
+                ? `<span class="px-3 py-1 bg-gray-800 text-white text-xs font-semibold rounded-lg shadow-md">${d.matches} matches</span>`
+                : `<span class="text-xs text-gray-400">0 matches</span>`;
+
+            const noteIcon = `<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="text-gray-400 hover:text-gray-600 transition-colors"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5Z"/></svg>`;
+
+            tr.innerHTML = `
+                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">${d.name}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 hidden sm:table-cell">${d.address}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 hidden md:table-cell">${d.opp}</td>
+                <td class="px-2 py-4 whitespace-nowrap text-xs text-gray-700 hidden md:table-cell">${d.regio}</td>
+                <td class="px-2 py-4 whitespace-nowrap text-xs text-gray-700 hidden md:table-cell">${d.typeAanvraag}</td>
+                <td class="px-2 py-4 whitespace-nowrap text-xs text-gray-700 hidden md:table-cell">${d.typeCompensatie}</td>
+                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 hidden lg:table-cell">${d.update}</td>
+                <td class="px-6 py-4 whitespace-nowrap">
+                    <span class="status-badge ${getDecisionColorClass(d.status)}">${d.status}</span>
+                </td>
+                <td class="px-6 py-4 whitespace-nowrap text-right text-sm font-medium">
+                    <div class="flex items-center justify-end space-x-2">
+                        ${matchBadge}
+                        <button class="p-1">${noteIcon}</button>
+                        <div class="detail-action-button text-gray-500">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg>
+                        </div>
+                    </div>
+                </td>
+            `;
+            listBody.appendChild(tr);
+        });
+    }
+
+    function setupDashboardToggle() {
+        const filterMyDossiers = document.getElementById('filter-my-dossiers');
+        const filterRegio = document.getElementById('filter-regio');
+        const toggleListBtn = document.getElementById('toggle-list');
+        const toggleGisBtn = document.getElementById('toggle-gis');
+
+        const renderDashboard = () => {
+            const filterMine = filterMyDossiers.value === 'mine';
+            const selectedRegion = filterRegio.value;
+            renderDossierList(isGisView, filterMine, selectedRegion);
+        };
+
+        toggleListBtn.addEventListener('click', () => { isGisView = false; renderDashboard(); });
+        toggleGisBtn.addEventListener('click', () => { isGisView = true; renderDashboard(); });
+        filterMyDossiers.addEventListener('change', renderDashboard);
+        filterRegio.addEventListener('change', renderDashboard);
+    }
+
+    window.onload = function() {
+        setupDashboardToggle();
+        renderView();
+        showGisMap('K2_N');
+    };
+</script>
+</body>
+</html>
