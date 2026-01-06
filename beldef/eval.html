@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Enterprise Project Tracker</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+    
+    :root { 
+      --primary: #2563eb; 
+      --success: #059669; 
+    }
+    
+    body { 
+      background: #f1f5f9; 
+      font-family: 'Inter', sans-serif; 
+      color: #1e293b;
+    }
+
+    .pipeline-step {
+      position: relative;
+      flex: 1;
+      text-align: center;
+      padding-bottom: 1rem;
+    }
+
+    .pipeline-step:not(:last-child)::after {
+      content: '';
+      position: absolute;
+      top: 15px;
+      left: calc(50% + 15px);
+      width: calc(100% - 30px);
+      height: 2px;
+      background: #e2e8f0;
+      z-index: 1;
+    }
+
+    .pipeline-step.completed:not(:last-child)::after {
+      background: var(--success);
+    }
+
+    .step-node {
+      position: relative;
+      z-index: 2;
+      width: 32px;
+      height: 32px;
+      margin: 0 auto 8px;
+      border-radius: 50%;
+      background: white;
+      border: 2px solid #cbd5e1;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+      font-size: 12px;
+      font-weight: 600;
+    }
+
+    .pipeline-step.completed .step-node {
+      background: var(--success);
+      border-color: var(--success);
+      color: white;
+    }
+
+    .pipeline-step.active .step-node {
+      background: var(--primary);
+      border-color: var(--primary);
+      color: white;
+      box-shadow: 0 0 0 4px #dbeafe;
+    }
+
+    .pipeline-step.pending-selection .step-node {
+      border-color: var(--primary);
+      color: var(--primary);
+      background: #eff6ff;
+    }
+
+    .custom-shadow {
+      box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px -1px rgba(0, 0, 0, 0.1);
+    }
+
+    .flat-db-table th {
+      font-size: 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #64748b;
+      padding: 12px 8px;
+      border-bottom: 2px solid #f1f5f9;
+      text-align: left;
+    }
+    
+    .flat-db-table td {
+      font-size: 11px;
+      padding: 10px 8px;
+      border-bottom: 1px solid #f1f5f9;
+      color: #334155;
+    }
+  </style>
+</head>
+
+<body class="p-6">
+  <div class="max-w-6xl mx-auto">
+    
+    <!-- Top Bar -->
+    <div class="flex flex-col md:flex-row md:items-center justify-between gap-6 mb-8">
+      <div>
+        <h1 class="text-xl font-bold tracking-tight text-slate-900 flex items-center gap-2">
+          <i class="fa-solid fa-layer-group text-blue-600"></i>
+          Project Lifecycle Engine
+        </h1>
+        <p class="text-slate-500 text-xs">Internal Governance & Flat DB Integration</p>
+      </div>
+
+      <div class="flex items-center gap-3 bg-white p-2 rounded-lg border border-slate-200 shadow-sm">
+        <i class="fa-solid fa-folder-open text-slate-400 ml-2"></i>
+        <select id="projectSelector" class="bg-transparent text-sm font-medium focus:outline-none pr-4 cursor-pointer">
+          <!-- Populated by JS -->
+        </select>
+      </div>
+    </div>
+
+    <!-- Progress Pipeline -->
+    <div class="bg-white rounded-xl p-8 border border-slate-200 custom-shadow mb-6 overflow-x-auto">
+      <div id="pipelineContainer" class="flex min-w-[800px]">
+        <!-- Steps generated here -->
+      </div>
+    </div>
+
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+      <!-- Main Update Area -->
+      <div class="lg:col-span-2 space-y-6">
+        
+        <!-- Context Card -->
+        <div class="bg-white rounded-xl border border-slate-200 custom-shadow p-6">
+          <div class="flex justify-between items-start border-b border-slate-100 pb-4 mb-6">
+            <div>
+              <span id="projIdLabel" class="text-[10px] font-bold text-blue-600 uppercase tracking-widest">---</span>
+              <h2 id="projNameLabel" class="text-lg font-bold text-slate-800 italic">Select a project...</h2>
+              <div class="flex gap-4 mt-1">
+                <span class="text-[11px] text-slate-500 flex items-center gap-1">
+                  <i class="fa-solid fa-receipt opacity-50"></i> <span id="poLabel">---</span>
+                </span>
+                <span class="text-[11px] text-slate-500 flex items-center gap-1">
+                  <i class="fa-solid fa-clock opacity-50"></i> <span id="lastUpdatedLabel">---</span>
+                </span>
+              </div>
+            </div>
+            <div id="statusBadge" class="bg-slate-100 text-slate-600 text-[10px] font-bold px-2.5 py-1 rounded-md uppercase">
+              Standby
+            </div>
+          </div>
+
+          <!-- Evaluation Specific Form (Status F) -->
+          <div id="evaluationSection" class="hidden animate-in fade-in slide-in-from-top-2 duration-300">
+            <div class="bg-amber-50/50 border border-amber-100 rounded-lg p-5 mb-6">
+              <div class="flex items-center gap-2 mb-4 text-amber-800">
+                <i class="fa-solid fa-clipboard-check"></i>
+                <h3 class="text-sm font-bold uppercase tracking-tight">Phase Gate: Testing & Evaluation</h3>
+              </div>
+              
+              <div class="grid grid-cols-1 md:grid-cols-2 gap-5">
+                <div class="space-y-1">
+                  <label class="text-[11px] font-bold text-slate-500 uppercase">Briefing of Actions</label>
+                  <textarea id="evalBriefing" class="w-full text-sm border-slate-200 rounded-md focus:ring-blue-500 p-2 h-20" placeholder="Summary of testing activity..."></textarea>
+                </div>
+                <div class="space-y-1">
+                  <label class="text-[11px] font-bold text-slate-500 uppercase">Key Observations</label>
+                  <textarea id="evalObservations" class="w-full text-sm border-slate-200 rounded-md focus:ring-blue-500 p-2 h-20" placeholder="Major findings during evaluation..."></textarea>
+                </div>
+                <div class="space-y-1">
+                  <label class="text-[11px] font-bold text-slate-500 uppercase">Impact Assessment</label>
+                  <input id="evalImpact" type="text" class="w-full text-sm border-slate-200 rounded-md focus:ring-blue-500 p-2" placeholder="Scale of impact detected...">
+                </div>
+                <div class="grid grid-cols-2 gap-3">
+                  <div class="space-y-1">
+                    <label class="text-[11px] font-bold text-slate-500 uppercase">Verdict</label>
+                    <select id="evalVerdict" class="w-full text-sm border-slate-200 rounded-md p-2 bg-white">
+                      <option value="Pass">Pass</option>
+                      <option value="Fail">Fail</option>
+                      <option value="Conditional">Conditional</option>
+                    </select>
+                  </div>
+                  <div class="space-y-1">
+                    <label class="text-[11px] font-bold text-slate-500 uppercase">Intent to Scale?</label>
+                    <div class="flex gap-4 mt-2">
+                      <label class="flex items-center gap-1.5 text-xs text-slate-700 cursor-pointer">
+                        <input type="radio" name="scale" value="Yes" class="w-3.5 h-3.5 text-blue-600"> Yes
+                      </label>
+                      <label class="flex items-center gap-1.5 text-xs text-slate-700 cursor-pointer">
+                        <input type="radio" name="scale" value="No" class="w-3.5 h-3.5 text-blue-600"> No
+                      </label>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Action Button -->
+          <div class="mt-8">
+            <button id="saveBtn" class="w-full bg-slate-900 hover:bg-black text-white text-sm font-semibold py-3.5 px-4 rounded-lg transition-all flex items-center justify-center gap-2">
+              <i class="fa-solid fa-cloud-arrow-up text-xs"></i>
+              Post Update to Flat Database
+            </button>
+            <p class="text-center text-[10px] text-slate-400 mt-3 italic">Updating will add a new record to the flat database history.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Right Column: Mini Audit Trail -->
+      <div class="space-y-6">
+        <div class="bg-white rounded-xl border border-slate-200 custom-shadow p-6 flex flex-col h-full">
+          <h3 class="text-xs font-bold text-slate-400 uppercase tracking-widest mb-4 flex items-center justify-between">
+            Update History
+            <i class="fa-solid fa-clock-rotate-left"></i>
+          </h3>
+          <div id="historyLog" class="space-y-4 max-h-[400px] overflow-y-auto pr-2 custom-scroll">
+            <!-- Populated by JS -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- NEW SECTION: Flat Database View -->
+    <div class="bg-white rounded-xl border border-slate-200 custom-shadow overflow-hidden">
+      <div class="bg-slate-50 px-6 py-3 border-b border-slate-200 flex justify-between items-center">
+        <h3 class="text-xs font-bold text-slate-500 uppercase tracking-widest">Flat Database Representation (Audit Table)</h3>
+        <span class="text-[10px] text-slate-400 font-mono">Total Records: <span id="recordCount">0</span></span>
+      </div>
+      <div class="overflow-x-auto">
+        <table class="w-full flat-db-table">
+          <thead>
+            <tr>
+              <th>1. Status</th>
+              <th>2. Description</th>
+              <th>3. Testing Briefing</th>
+              <th>4. Key Observations</th>
+              <th>5. Impact Assessment</th>
+              <th>6. Verdict</th>
+              <th>7. Intent to Scale?</th>
+              <th>8. PO# / PO#s</th>
+            </tr>
+          </thead>
+          <tbody id="flatDbBody">
+            <!-- Flat rows populated here -->
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast" class="fixed top-6 left-1/2 -translate-x-1/2 bg-slate-800 text-white px-5 py-2.5 rounded-full shadow-2xl translate-y-[-100px] opacity-0 transition-all duration-500 flex items-center gap-3 z-50 text-sm">
+    <i class="fa-solid fa-circle-check text-emerald-400"></i>
+    <span id="toastMsg">Success</span>
+  </div>
+
+  <script>
+    // Column definitions based on your 8-column structure
+    const STATUS_MAP = [
+      { id: 'a', name: 'Project Offer', detail: 'A proposal or quotation is made' },
+      { id: 'b', name: 'Budget Allocated', detail: 'Budget is approved or earmarked' },
+      { id: 'c', name: 'Project Kick-Off', detail: 'The project is formally initiated' },
+      { id: 'd', name: 'Project Ordered', detail: 'The actual order or purchase order is placed' },
+      { id: 'e', name: 'Purchased', detail: 'Items/services have been procured' },
+      { id: 'f', name: 'Under evaluation', detail: 'The purchased items and project outcomes are assessed' },
+      { id: 'g', name: 'Reporting', detail: 'The outcomes, findings, and lessons learned are documented' },
+      { id: 'h', name: 'Closed', detail: 'The project is formally completed and closed' }
+    ];
+
+    /**
+     * This "Flat Database" stores records exactly as your 8-column structure dictates.
+     * Each update creates a new entry (row).
+     */
+    let flatDatabase = [
+      {
+        projectId: "P-24-101",
+        col1: "a. Project Offer",
+        col2: "A proposal or quotation is made",
+        col3: "N/A", col4: "N/A", col5: "N/A", col6: "N/A", col7: "N/A",
+        col8: "PO-88210"
+      },
+      {
+        projectId: "P-24-101",
+        col1: "b. Budget Allocated",
+        col2: "Budget is approved or earmarked",
+        col3: "N/A", col4: "N/A", col5: "N/A", col6: "N/A", col7: "N/A",
+        col8: "PO-88210"
+      },
+      {
+        projectId: "P-24-205",
+        col1: "f. Under evaluation",
+        col2: "The purchased items and project outcomes are assessed",
+        col3: "Site A installation complete",
+        col4: "Stable performance noted at 100% load",
+        col5: "High Efficiency",
+        col6: "Pass",
+        col7: "Yes",
+        col8: "PO-99001; PO-99002"
+      }
+    ];
+
+    // Reference data for project details
+    const projects = {
+      "P-24-101": { name: "Enterprise ERP Expansion", po: "PO-88210" },
+      "P-24-205": { name: "Edge Computing Pilot", po: "PO-99001; PO-99002" }
+    };
+
+    let activeProject = "";
+    let targetStatus = "";
+
+    function init() {
+      const selector = document.getElementById('projectSelector');
+      Object.keys(projects).forEach(id => {
+        const opt = document.createElement('option');
+        opt.value = id;
+        opt.textContent = `${id} | ${projects[id].name}`;
+        selector.appendChild(opt);
+      });
+
+      activeProject = selector.value;
+      loadProject(activeProject);
+
+      selector.onchange = (e) => {
+        activeProject = e.target.value;
+        loadProject(activeProject);
+      };
+
+      document.getElementById('saveBtn').onclick = handleSave;
+    }
+
+    function loadProject(id) {
+      const proj = projects[id];
+      // Get latest status for this project from the flat database
+      const projectHistory = flatDatabase.filter(row => row.projectId === id);
+      const latestRow = projectHistory[projectHistory.length - 1];
+      
+      // Parse out the status letter (e.g. "a" from "a. Project Offer")
+      const currentStatusId = latestRow.col1.split('.')[0];
+      targetStatus = currentStatusId;
+
+      // Update UI Labels
+      document.getElementById('projIdLabel').textContent = id;
+      document.getElementById('projNameLabel').textContent = proj.name;
+      document.getElementById('poLabel').textContent = proj.po;
+      document.getElementById('statusBadge').textContent = STATUS_MAP.find(s => s.id === currentStatusId).name;
+
+      renderPipeline(currentStatusId);
+      renderHistory(projectHistory);
+      renderFlatTable();
+      
+      // If the latest state was 'f', pre-fill the form with its data
+      if (currentStatusId === 'f') {
+        toggleEvalFields('f', latestRow);
+      } else {
+        toggleEvalFields(currentStatusId);
+      }
+    }
+
+    function renderPipeline(currentStatusId) {
+      const container = document.getElementById('pipelineContainer');
+      container.innerHTML = "";
+      
+      const currentIdx = STATUS_MAP.findIndex(s => s.id === currentStatusId);
+      const targetIdx = STATUS_MAP.findIndex(s => s.id === targetStatus);
+
+      STATUS_MAP.forEach((s, idx) => {
+        const div = document.createElement('div');
+        const isCompleted = idx < currentIdx;
+        const isActive = idx === currentIdx;
+        const isSelected = idx === targetIdx;
+
+        div.className = `pipeline-step ${isCompleted ? 'completed' : ''} ${isActive ? 'active' : ''} ${isSelected && !isActive ? 'pending-selection' : ''}`;
+        
+        div.innerHTML = `
+          <div class="step-node cursor-pointer">
+            ${isCompleted ? '<i class="fa-solid fa-check"></i>' : s.id.toUpperCase()}
+          </div>
+          <div class="text-[10px] font-bold text-slate-700 mt-1 uppercase tracking-tighter">${s.name}</div>
+        `;
+
+        div.onclick = () => {
+          targetStatus = s.id;
+          renderPipeline(currentStatusId);
+          toggleEvalFields(s.id);
+        };
+
+        container.appendChild(div);
+      });
+    }
+
+    function toggleEvalFields(statusId, rowData = null) {
+      const panel = document.getElementById('evaluationSection');
+      if (statusId === 'f') {
+        panel.classList.remove('hidden');
+        if (rowData && rowData.col3 !== "N/A") {
+          document.getElementById('evalBriefing').value = rowData.col3;
+          document.getElementById('evalObservations').value = rowData.col4;
+          document.getElementById('evalImpact').value = rowData.col5;
+          document.getElementById('evalVerdict').value = rowData.col6;
+          const radio = document.querySelector(`input[name="scale"][value="${rowData.col7}"]`);
+          if (radio) radio.checked = true;
+        } else {
+          document.querySelectorAll('#evaluationSection input:not([type="radio"]), #evaluationSection textarea').forEach(el => el.value = "");
+        }
+      } else {
+        panel.classList.add('hidden');
+      }
+    }
+
+    function renderHistory(history) {
+      const log = document.getElementById('historyLog');
+      log.innerHTML = "";
+      
+      [...history].reverse().forEach(row => {
+        const div = document.createElement('div');
+        div.className = "relative pl-4 border-l-2 border-slate-100 pb-2";
+        div.innerHTML = `
+          <div class="absolute -left-[7px] top-0 w-3 h-3 rounded-full bg-slate-200 border-2 border-white"></div>
+          <div class="text-xs font-bold text-slate-700">${row.col1}</div>
+          <div class="text-[10px] text-slate-500 italic leading-tight mt-0.5">${row.col2}</div>
+        `;
+        log.appendChild(div);
+      });
+    }
+
+    /**
+     * Renders the visual representation of the flat 8-column database
+     */
+    function renderFlatTable() {
+        const body = document.getElementById('flatDbBody');
+        body.innerHTML = "";
+        document.getElementById('recordCount').textContent = flatDatabase.length;
+
+        [...flatDatabase].reverse().forEach(row => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td><span class="font-bold">${row.col1}</span></td>
+                <td class="max-w-[150px] truncate" title="${row.col2}">${row.col2}</td>
+                <td>${row.col3}</td>
+                <td>${row.col4}</td>
+                <td>${row.col5}</td>
+                <td>${row.col6}</td>
+                <td>${row.col7}</td>
+                <td class="font-mono text-[10px]">${row.col8}</td>
+            `;
+            body.appendChild(tr);
+        });
+    }
+
+    function handleSave() {
+      const proj = projects[activeProject];
+      const statusObj = STATUS_MAP.find(s => s.id === targetStatus);
+
+      // Construct the 8-column Flat Record
+      const newFlatRecord = {
+        projectId: activeProject,
+        col1: `${statusObj.id}. ${statusObj.name}`, // 1. Status
+        col2: statusObj.detail,                      // 2. Status Description
+        col3: "N/A",                                // 3. Testing Briefing
+        col4: "N/A",                                // 4. Observations
+        col5: "N/A",                                // 5. Impact
+        col6: "N/A",                                // 6. Verdict
+        col7: "N/A",                                // 7. Intent to Scale
+        col8: proj.po                               // 8. PO#s
+      };
+
+      // If moving to/staying in Evaluation, fill in those specific columns
+      if (targetStatus === 'f') {
+        newFlatRecord.col3 = document.getElementById('evalBriefing').value || "No briefing";
+        newFlatRecord.col4 = document.getElementById('evalObservations').value || "No observations";
+        newFlatRecord.col5 = document.getElementById('evalImpact').value || "No impact assessment";
+        newFlatRecord.col6 = document.getElementById('evalVerdict').value;
+        newFlatRecord.col7 = document.querySelector('input[name="scale"]:checked')?.value || "No";
+      }
+
+      // Append to the flat database (Persistence)
+      flatDatabase.push(newFlatRecord);
+
+      // UI Feedback
+      loadProject(activeProject);
+      showToast(`Database Record Created: Status ${statusObj.id.toUpperCase()}`);
+    }
+
+    function showToast(msg) {
+      const t = document.getElementById('toast');
+      document.getElementById('toastMsg').textContent = msg;
+      t.classList.remove('translate-y-[-100px]', 'opacity-0');
+      t.classList.add('translate-y-0', 'opacity-100');
+      setTimeout(() => {
+        t.classList.add('translate-y-[-100px]', 'opacity-0');
+        t.classList.remove('translate-y-0', 'opacity-100');
+      }, 3000);
+    }
+
+    window.onload = init;
+  </script>
+</body>
+</html>
